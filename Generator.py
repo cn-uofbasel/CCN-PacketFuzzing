@@ -17,15 +17,17 @@ def makeGenericNameComponent(len, data=0):
 def makeImplicitSha256DigestComponent(len, data=0):
     return makeBasicBlob(enc.Tlv.ImplicitSha256DigestComponent, len, data)
 
-def makeNamePacket(len):
-    blob = makeGenericNameComponent(len)
+
+def makeNamePacket(len, data=0):
+    blob = makeGenericNameComponent(len, data)
     blob = util.Blob(blob.toBytes() + makeImplicitSha256DigestComponent(3).toBytes())
     return makeBasicBlob(enc.Tlv.Name,len,blob.toBytes())
 
 
-def makeInterestPacket(len):
-    blob = makeNamePacket(len)
+def makeInterestPacket(len, data=0):
+    blob = makeNamePacket(len, data)
     return makeBasicBlob(enc.Tlv.Interest,len,blob.toBytes())
+
 
 def randomData(len):
     random.random()
