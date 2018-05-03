@@ -19,6 +19,19 @@ def makeImplicitSha256DigestComponent():
     return makeBasicPackage("ImplicitSha256DigestComponent", enc.Tlv.ImplicitSha256DigestComponent)
 
 
+def makeSignatureType():
+    return makeBasicPackage("SignatureType", enc.Tlv.SignatureType)
+
+
+def makeSignatureInfo():
+    len = randomLength()
+    stpackage = makeSignatureType()
+    return Package("SignatureInfo", enc.Tlv.SignatureInfo, len, 0, [stpackage])
+
+
+def makeSignatureValue():
+    return makeBasicPackage("SignatureValue", enc.Tlv.SignatureValue)
+
 def makeNamePacket():
     len = randomLength()
     gncpackage = makeGenericNameComponent()
@@ -34,6 +47,19 @@ def makeInterestPacket():
     subpackages.append(npackage)
     ipackage = Package("Interest", enc.Tlv.Interest, len, 0, subpackages)
     return ipackage
+
+
+def makeDataPacket():
+    len = randomLength()
+    subpackages = []
+    npackage = makeNamePacket()
+    subpackages.append(npackage)
+    sipackage = makeSignatureInfo()
+    subpackages.append(sipackage)
+    svpackage = makeSignatureValue()
+    subpackages.append(svpackage)
+    datpackage = Package("Data", enc.Tlv.Data, len, 0, subpackages)
+    return datpackage
 
 
 def randomData(len):
