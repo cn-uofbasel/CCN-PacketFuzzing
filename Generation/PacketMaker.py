@@ -20,7 +20,6 @@ def makeImplicitSha256DigestComponent():
 
 
 def makeNamePacket():
-    subpackages = 2
     len = randomLength()
     gncpackage = makeGenericNameComponent()
     isdpackage = makeImplicitSha256DigestComponent()
@@ -28,9 +27,13 @@ def makeNamePacket():
     return npackage
 
 
-def makeInterestPacket(len, data=0):
-    blob = makeNamePacket(len, data)
-    return makeBasicPackage(enc.Tlv.Interest, blob.__len__(), blob.toBytes())
+def makeInterestPacket():
+    len = randomLength()
+    subpackages = []
+    npackage = makeNamePacket()
+    subpackages.append(npackage)
+    ipackage = Package("Interest", enc.Tlv.Interest, len, 0, subpackages)
+    return ipackage
 
 
 def randomData(len):
