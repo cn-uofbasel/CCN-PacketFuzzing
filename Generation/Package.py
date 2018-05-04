@@ -1,6 +1,6 @@
 class Package:
 
-    def __init__(self, name, type, len, rlen, subpackages=None):
+    def __init__(self, name, type, len, subpackages=None):
         """Represents a NDN Package with all necesary data to randomize length and value
             this class is for generation purpose and will be converted into a "real" NDN-Package
 
@@ -10,16 +10,12 @@ class Package:
             rlen -- the real byte length of the package
             subpackages -- list of recursive subpackages this package should contain
             """
-        if subpackages != None:
-            self.rlen = 0
-            for p in subpackages:
-                self.rlen += p.rlen
-        else:
-            self.rlen = rlen
+
         self.name = name
         self.type = type
         self.len = len
         self.subpackages = subpackages
+        self.rlen = 0
 
     def __repr__(self):
         type = str(self.type)
