@@ -1,5 +1,4 @@
 from pyndn.encoding import TlvEncoder
-from pyndn.util import Blob
 import random
 import os
 

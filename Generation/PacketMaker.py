@@ -1,6 +1,13 @@
 import pyndn.encoding as enc
 from Generation.Package import Package
 import random
+from enum import Enum
+
+
+class Packages(Enum):
+    Name = 0
+    Interest = 1
+    Data = 2
 
 
 def makeBasicPackage(name, type):
@@ -28,6 +35,7 @@ def makeSignatureInfo():
 
 def makeSignatureValue():
     return makeBasicPackage("SignatureValue", enc.Tlv.SignatureValue)
+
 
 def makeNamePacket():
     len = randomLength()
@@ -58,7 +66,13 @@ def makeDataPacket():
     datpackage = Package("Data", enc.Tlv.Data, len, subpackages)
     return datpackage
 
+
 def randomLength():
     random.random()
-    random.sample
     return random.randint(0, 20)
+
+
+makePackage = {Packages.Name: makeNamePacket(),
+               Packages.Data: makeDataPacket(),
+               Packages.Interest: makeInterestPacket(),
+               }
