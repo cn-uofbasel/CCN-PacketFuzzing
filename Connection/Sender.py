@@ -20,8 +20,10 @@ class Sender:
 
     def __init__(self, ip, port):
         try:
-            self.ip = ipaddress.IPv4Address(ip)
+            #self.ip = ipaddress.ip_address('127.0.0.1')
+            self.ip = "127.0.0.1"
         except ipaddress.AddressValueError:
+            print(self.ip)
             self.ip = input("Please specify a correct IP address in form of \"127.0.0.1\"")
 
         logging.debug("Ip address set to %s" % str(self.ip))
@@ -37,8 +39,8 @@ class Sender:
     """
 
     def sendMessage(self, message):
-        self.socket.sendto(self, message, (self.ip, self.port))
+        self.socket.sendto(message, (self.ip, self.port))
 
 
 if __name__ == "__main__":
-    send = Sender("Hallo", 8080)
+    send = Sender("127.0.0.1", 9000)
