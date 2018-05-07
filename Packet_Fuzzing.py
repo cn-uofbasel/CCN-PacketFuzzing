@@ -3,7 +3,9 @@ import os
 import time
 from Connection.Sender import Sender
 import socket
-import Generation
+from Generation import PacketMaker
+from Generation import Encode
+import random
 
 if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
@@ -25,8 +27,13 @@ if __name__ == '__main__':
 
     # TODO Check if port 9000 is also used on PyCN-lite
     sender = Sender(socket.gethostbyname(socket.gethostname()), 9000)
+    history = []
 
     # TODO Check if parser is still running
     while (True):
         # loop
-        print("running")
+        package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
+        bytes = Encode.encodePackage(package)
+        history.append((package, bytes.hex()))
+        time.sleep(1)
+        print(history)
