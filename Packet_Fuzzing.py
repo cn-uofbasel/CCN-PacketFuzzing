@@ -33,6 +33,7 @@ if __name__ == '__main__':
     elif args.parser in pycn:
         print("PyCN invoked")
         print("with path ", args.path)
+        thread.start_new_thread(start.startPyCN,(args.path,))
 
     elif args.parser in picn:
         print("PiCN invoked")

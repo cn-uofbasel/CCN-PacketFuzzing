@@ -18,7 +18,6 @@ class Sender:
     @:param ip      The ip address in the format of "127.0.0.1"
     @:param port    The port as an integer
     """
-
     def __init__(self, ip, port):
         try:
             #self.ip = ipaddress.ip_address('127.0.0.1')

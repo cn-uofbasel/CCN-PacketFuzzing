@@ -17,7 +17,7 @@ def makeBasicPackage(name, type):
 
 
 def makeGenericNameComponent():
-    return makeBasicPackage("NameComponent", enc.Tlv.ValidityPeriod_NotAfter)
+    return makeBasicPackage("NameComponent", enc.Tlv.NameComponent)
 
 
 def makeImplicitSha256DigestComponent():
