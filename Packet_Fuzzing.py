@@ -7,7 +7,7 @@ import random
 import os
 import sys
 import thread
-from CCNStart import StartCCN as start
+from Starter import StartParser as start
 
 if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
@@ -47,13 +47,15 @@ if __name__ == '__main__':
     history = []
 
     # TODO Check if parser is still running
-    while (True):
+    while (thread._count() > 0):
         # loop
+        #package = PacketMaker.makePackage[PacketMaker.Packages.Interest]
         package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
         print(package)
-        time.sleep(3)
+        print("Size: ", bytes.__len__())
+        time.sleep(0.1)
         #print(history)
 
