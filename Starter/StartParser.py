@@ -19,7 +19,7 @@ def startPiCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        print("Error:\n")
+        print("Error!:\n")
         print(e)
 
 def startPyCN(path):
