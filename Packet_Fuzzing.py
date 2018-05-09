@@ -8,6 +8,7 @@ import os
 import sys
 import thread
 from CCNStart import StartCCN as start
+fuzziness = 1
 
 if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
@@ -45,5 +46,9 @@ if __name__ == '__main__':
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
+        print(package)
         time.sleep(3)
         #print(history)
+
+def getFuzziness():
+    return fuzziness
