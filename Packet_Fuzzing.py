@@ -7,8 +7,7 @@ import random
 import os
 import sys
 import thread
-from Starter import StartParser as start
-fuzziness = 1
+from CCNStart import StartCCN as start
 
 if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
@@ -19,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('path', help="path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
     args = parser.parse_args()
-
+    Encode.setFuzziness(args.fuzziness)
     if (not os.path.exists(args.path)):
         errstring = "The path "+args.path+" does not exist on this machine"
         sys.exit(errstring)
@@ -53,8 +52,7 @@ if __name__ == '__main__':
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
+        print(package)
         time.sleep(3)
         #print(history)
 
-def getFuzziness():
-    return fuzziness
