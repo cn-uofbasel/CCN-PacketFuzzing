@@ -58,13 +58,14 @@ def makeDelegation():
 
 def makeLinkContent():
     cpackage = makeDelegation()
+    len = randomLength(1)
     return Package("LinkContent", enc.Tlv.ContentType, len, [cpackage])
 
 def makeNamePacket():
     gncpackage = makeGenericNameComponent()
     isdpackage = makeImplicitSha256DigestComponent()
     length = randomLength(2)
-    npackage = Package("Name", enc.Tlv.Name, len, [gncpackage, isdpackage])
+    npackage = Package("Name", enc.Tlv.Name, length, [gncpackage, isdpackage])
     return npackage
 
 
@@ -104,6 +105,7 @@ def makeLinkObject():
     subpackages.append(svpackage)
     length = randomLength(len(subpackages))
     linkObject = Package("LinkObject", enc.Tlv.Data, length, subpackages)
+    return linkObject
 
 
 def randomLength(subpackes=1):
