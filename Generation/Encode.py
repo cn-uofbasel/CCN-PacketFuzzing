@@ -16,8 +16,8 @@ def encodePackage(package):
         data = randomData(package.len)
         encoder.writeBuffer(data)
         len = data.__len__()
-    encoder.writeTypeAndLength(package.type, package.len)
     package.rlen = len
+    encoder.writeTypeAndLength(package.type, package.len)
     return encoder.getOutput()
 
 
