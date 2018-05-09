@@ -24,4 +24,5 @@ def encodePackage(package):
 
 def randomData(len):
     random.random()
-    return bytes(os.urandom(len))
+    offset = random.randint(-len,len)
+    return bytes(os.urandom(len+offset))
