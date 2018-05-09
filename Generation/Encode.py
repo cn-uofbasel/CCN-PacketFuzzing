@@ -12,6 +12,7 @@ def encodePackage(package):
         for p in reversed(subpackages):
             encoder.writeBuffer(encodePackage(p))
         len = encoder.getOutput().__len__()
+        package.len = len
     else:
         data = randomData(package.len)
         encoder.writeBuffer(data)
@@ -23,5 +24,5 @@ def encodePackage(package):
 
 def randomData(len):
     random.random()
-    offset = random.randint(0, 2 * len)
-    return bytes(os.urandom(len + offset))
+    offset = random.randint(-len,len)
+    return bytes(os.urandom(len+offset))
