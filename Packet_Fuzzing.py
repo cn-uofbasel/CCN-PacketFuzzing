@@ -7,14 +7,16 @@ import random
 import os
 import sys
 import thread
-from CCNStart import StartCCN as start
+from Starter import StartParser as start
 
 if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
+    picn = ['picn','PiCN']
     parser = argparse.ArgumentParser(description='Packet fuzzer')
-    parser.add_argument('parser', choices=ccn + pycn, default='ccn', help="the parser which should be tested")
+    parser.add_argument('parser', choices=ccn + pycn + picn, default='ccn', help="the parser which should be tested")
     parser.add_argument('path', help="path to the parser on this machine")
+    parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
     args = parser.parse_args()
 
     if (not os.path.exists(args.path)):
@@ -24,13 +26,18 @@ if __name__ == '__main__':
     # TODO start parser (non-blocking)
 
     if args.parser in ccn:
-        print("ccn invoked")
+        print("CCN invoked")
         print("with path ", args.path)
         thread.start_new_thread(start.startCCN,(args.path,))
 
     elif args.parser in pycn:
-        print("pycn invoked")
+        print("PyCN invoked")
         print("with path ", args.path)
+
+    elif args.parser in picn:
+        print("PiCN invoked")
+        print("with path ", args.path)
+        thread.start_new_thread(start.startPiCN,(args.path,))
 
     time.sleep(5)
 
@@ -45,5 +52,5 @@ if __name__ == '__main__':
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        time.sleep(3)
+        time.sleep(0.1)
         #print(history)
