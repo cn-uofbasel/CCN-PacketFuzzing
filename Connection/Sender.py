@@ -1,6 +1,7 @@
 import socket
 import ipaddress
 import logging
+import binascii
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -39,7 +40,8 @@ class Sender:
     """
 
     def sendMessage(self, message):
-        self.socket.sendto(message, (self.ip, self.port))
+        print(binascii.hexlify(message))
+        self.socket.sendto(message, ('localhost', 9000))
 
 
 if __name__ == "__main__":

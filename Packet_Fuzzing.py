@@ -43,7 +43,7 @@ if __name__ == '__main__':
         # loop
         package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
         bytes = Encode.encodePackage(package)
-        sender.sendMessage(bytes)
+        sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        time.sleep(10)
-        print(history)
+        time.sleep(3)
+        #print(history)
