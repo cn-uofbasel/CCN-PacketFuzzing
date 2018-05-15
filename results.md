@@ -17,7 +17,10 @@ packet --> error not caught --> parser crashes, following packages will be recei
 
 If MetaInfo is added to protocol, the parser crashes when the length value exeed the buffer length or the subpackges doesn't sum up to the bufferlength. Following packages will be recieved but not longer decoded.
 
-Name Packages are always dropped.
+Name Packages are always dropped. Unknown Packet Type
 
-Interestpackages: 900 Packages sent, correctly ignored false info, no errors raised.
+Interestpackages: 900 Packages sent, correctly ignored false info, no errors raised (Fuzziness 0,1)
+DataPackes: Fuzziness
+LinkObject: TLV Length exceeds the Buffer Length even at fuzziness level 0, where all lengths are correct
+
 
