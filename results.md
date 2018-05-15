@@ -21,11 +21,11 @@ Name Packages are always dropped. Unknown Packet Type. No crash
 
 Level 0:
 Interestpackages: 900 Packages sent, correctly ignored false info, no errors raised  
-DataPackes: Fuzziness  
+DataPackes: Buffer errors although all lengths were correctly encoded. Parser Crashes.
 LinkObject: TLV Length exceeds the Buffer Length or TLV does not equal the total length of the Nestet TLV even at fuzziness level 0, where all lengths are correct. Parser crashes.  
 
 Level 1:  
+    Lenght errors on all package types with crashes
 
-LinkObject: same as level 0. Here the error is valid, but still a crash occurs  
-DataPackes: exceeds the Buffer Length and crash.  
-InteresPackes: 
+Level 2:  
+    Same as Level 1
