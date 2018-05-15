@@ -13,7 +13,10 @@ Future test:
 PiCN:
 
 Bug: MetaInfo optional since NDN packet version 0.3, but PiCN tries to decode meta info even if no meta info is in the
-packet --> error not caught --> parser crashes, following packages received but no more decoding.
+packet --> error not caught --> parser crashes, following packages will be received but not longer decoded.
+
+If MetaInfo is added to protocol, the parser crashes when the length value exeed the buffer length. Following packages 
+will be recieved but not longer decoded
 
 Interestpackages: 900 Packages sent, correctly ignored false info, no errors raised.
 
