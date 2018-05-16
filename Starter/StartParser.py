@@ -1,5 +1,8 @@
 import subprocess
 from subprocess import PIPE,CalledProcessError,Popen
+from Logger import Logger
+
+logger = Logger()
 
 """
 Methods to start a subprocess with the matching parser.
@@ -10,8 +13,8 @@ def startCCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        print("Error:\n")
-        print(e)
+        logger.debug("Error:\n")
+        logger.debug(e)
 
 def startPiCN(path):
     command = path +"/starter/picn-relay --format ndntlv -l debug --port 9000"
@@ -19,8 +22,9 @@ def startPiCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        print("Error!:\n")
-        print(e)
+        logger.debug("Error:\n")
+        logger.debug(e)
+
 
 def startPyCN(path):
     #TODO implement the starting command for
@@ -29,5 +33,5 @@ def startPyCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        print("Error:\n")
-        print(e)
+        logger.debug("Error:\n")
+        logger.debug(e)

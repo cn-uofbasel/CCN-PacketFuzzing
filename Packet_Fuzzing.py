@@ -1,15 +1,17 @@
 import argparse
 import time
 import random
+from Logger import Logger
 from Connection.Sender import Sender
 from Generation import PacketMaker
 from Generation import Encode
 import os
 import sys
-import thread
+import _thread
 from Starter import StartParser as start
 
 if __name__ == '__main__':
+    logger = Logger()
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
     picn = ['picn','PiCN']
@@ -26,19 +28,16 @@ if __name__ == '__main__':
     # TODO start parser (non-blocking)
 
     if args.parser in ccn:
-        print("CCN invoked")
-        print("with path ", args.path)
-        thread.start_new_thread(start.startCCN,(args.path,))
+        logger.info("CCN invoked with path %s", args.path)
+        _thread.start_new_thread(start.startCCN,(args.path,))
 
     elif args.parser in pycn:
-        print("PyCN invoked")
-        print("with path ", args.path)
-        thread.start_new_thread(start.startPyCN,(args.path,))
+        logger.info("PyCN invoked with path %s", args.path)
+        _thread.start_new_thread(start.startPyCN,(args.path,))
 
     elif args.parser in picn:
-        print("PiCN invoked")
-        print("with path ", args.path)
-        thread.start_new_thread(start.startPiCN,(args.path,))
+        logger.info("PiCN invoked with path %s", args.path)
+        _thread.start_new_thread(start.startPiCN,(args.path,))
 
     time.sleep(5)
 
@@ -47,15 +46,16 @@ if __name__ == '__main__':
     history = []
 
     # TODO Check if parser is still running
-    while (thread._count() > 0):
+    packCount = 0
+    while (_thread._count() > 0):
         # loop
-        #package = PacketMaker.makePackage[PacketMaker.Packages.Interest]
-        package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
+        package = PacketMaker.makePackage[PacketMaker.Packages.Name]
+        #package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        print(package)
-        print("Size: ", bytes.__len__())
+        logger.debug("Package n° %d \n %s", packCount,package)
+        logger.debug("Package %d Size: %d",packCount, bytes.__len__())
         time.sleep(0.1)
-        #print(history)
+        packCount+=1
 
