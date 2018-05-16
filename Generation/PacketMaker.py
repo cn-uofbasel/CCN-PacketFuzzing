@@ -45,6 +45,9 @@ def makeMetaInfo():
 def makePreference():
     return makeBasicPackage("Preference", enc.Tlv.Link_Preference)
 
+def makeMetaInfo():
+    return makeBasicPackage("MetaInfo",enc.Tlv.MetaInfo)
+
 
 def makeDelegation():
     subpackages = []
@@ -82,6 +85,8 @@ def makeDataPacket():
     subpackages = []
     npackage = makeNamePacket()
     subpackages.append(npackage)
+    mipackage = makeMetaInfo()
+    subpackages.append(mipackage)
     sipackage = makeSignatureInfo()
     subpackages.append(sipackage)
     svpackage = makeSignatureValue()
