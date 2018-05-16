@@ -1,9 +1,9 @@
 import argparse
 import time
+import random
 from Connection.Sender import Sender
 from Generation import PacketMaker
 from Generation import Encode
-import random
 import os
 import sys
 import thread

@@ -45,9 +45,6 @@ def makeMetaInfo():
 def makePreference():
     return makeBasicPackage("Preference", enc.Tlv.Link_Preference)
 
-def makeMetaInfo():
-    return makeBasicPackage("MetaInfo",enc.Tlv.MetaInfo)
-
 
 def makeDelegation():
     subpackages = []
@@ -61,8 +58,8 @@ def makeDelegation():
 
 def makeLinkContent():
     cpackage = makeDelegation()
-    len = randomLength(1)
-    return Package("LinkContent", enc.Tlv.ContentType, len, [cpackage])
+    length = randomLength(1)
+    return Package("LinkContent", enc.Tlv.ContentType, length, [cpackage])
 
 def makeNamePacket():
     gncpackage = makeGenericNameComponent()
