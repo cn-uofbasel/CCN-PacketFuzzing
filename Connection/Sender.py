@@ -2,6 +2,7 @@ import socket
 import ipaddress
 import logging
 import binascii
+from Logger import Logger
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -19,18 +20,19 @@ class Sender:
     @:param port    The port as an integer
     """
     def __init__(self, ip, port):
+        logger = Logger()
         try:
             #self.ip = ipaddress.ip_address('127.0.0.1')
             self.ip = "127.0.0.1"
         except ipaddress.AddressValueError:
-            print(self.ip)
+            logger.debug(self.ip)
             self.ip = input("Please specify a correct IP address in form of \"127.0.0.1\"")
 
-        logging.debug("Ip address set to %s" % str(self.ip))
+        logger.debug("Ip address set to %s" % str(self.ip))
         self.port = port
-        logging.debug("Port set to %d" % self.port)
+        logger.debug("Port set to %d" % self.port)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        logging.debug("Socket created.")
+        logger.debug("Socket created.")
 
     """
     Method that uses the UDP socket to send the given message. 
@@ -39,9 +41,6 @@ class Sender:
     """
 
     def sendMessage(self, message):
-        print(binascii.hexlify(message))
+        logger = Logger()
+        logger.debug("Message in Bytes: \t %a",binascii.hexlify(message))
         self.socket.sendto(message, ('localhost', 9000))
-
-
-if __name__ == "__main__":
-    send = Sender("127.0.0.1", 9000)
