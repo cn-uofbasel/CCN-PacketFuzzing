@@ -11,24 +11,24 @@ import _thread
 from Starter import StartParser as start
 
 
-logging.basicConfig(level=logging.DEBUG)
-
-def getPackage(packageArgs):
-    if packageArgs is not None:
-        if packageArgs == 'n':
-            logging.debug("Selected Type: Name")
-            return PacketMaker.makePackage[PacketMaker.Packages.Name]
-        elif packageArgs == 'd':
-            logging.debug("Selected Type: Data")
-            return PacketMaker.makePackage[PacketMaker.Packages.Data]
-        elif packageArgs == 'l':
-            logging.debug("Selected Type: LinkObject")
-            return PacketMaker.makePackage[PacketMaker.Packages.LinkObject]
-        elif packageArgs == 'i':
-            logging.debug("Selected Type: Interest")
-            return PacketMaker.makePackage[PacketMaker.Packages.Interest]
-    logging.debug("Selected Type: All")
-    return PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
+def getSelectedTypes(packageArgs):
+    if packageArgs != 0:
+        typeList = []
+        outString = "Selected packages: \t"
+        if 'n' in packageArgs:
+            typeList.append(PacketMaker.Packages.Name)
+            outString += "Name\t"
+        if 'd' in packageArgs:
+            typeList.append(PacketMaker.Packages.Data)
+            outString += "Data\t"
+        if 'i' in packageArgs:
+            typeList.append(PacketMaker.Packages.Interest)
+            outString += "Interest\t"
+        if 'l' in packageArgs:
+            typeList.append(PacketMaker.Packages.LinkObject)
+        return (typeList,outString)
+    else:
+        return (list(PacketMaker.Packages),"Selected packages: \tAll")
 
 
 if __name__ == '__main__':
@@ -40,14 +40,12 @@ if __name__ == '__main__':
     parser.add_argument('parser', choices=ccn + pycn + picn, default='ccn', help="The parser which should be tested")
     parser.add_argument('path', help="Path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
-    parser.add_argument('-p', '--packages', help='The package type to be sent', required=False, default=0, type=str, choices=['n','d','l','i'])
+    parser.add_argument('-p', '--packages', help='The package type to be sent',nargs='+', required=False, default=0, type=str, choices=['n','d','l','i'])
     args = parser.parse_args()
     Encode.setFuzziness(args.fuzziness)
-    if (not os.path.exists(args.path)):
-        errstring = "The path "+args.path+" does not exist on this machine"
-        sys.exit(errstring)
-
-    # TODO start parser (non-blocking)
+    if not os.path.exists(args.path):
+        errString = "The path "+args.path+" does not exist on this machine"
+        sys.exit(errString)
 
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
@@ -68,11 +66,14 @@ if __name__ == '__main__':
     history = []
 
     # TODO Check if parser is still running
+
+    (types,outString) = getSelectedTypes(args.packages)
+    logger.debug(outString)
+
     packCount = 0
     while (_thread._count() > 0):
         # loop
-        package = PacketMaker.makePackage[PacketMaker.Packages.Name]
-        #package = PacketMaker.makePackage[random.choice(list(PacketMaker.Packages))]
+        package = PacketMaker.makePackage[random.choice(list(types))]
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
