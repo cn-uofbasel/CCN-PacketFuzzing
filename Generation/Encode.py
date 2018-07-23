@@ -1,5 +1,6 @@
 from pyndn.encoding import TlvEncoder
 import random
+from Logger import Logger
 import os
 
 fuzziness = 1
@@ -10,6 +11,8 @@ def setFuzziness(fuzz):
 
 def encodePackage(package):
     global fuzziness
+    logger = Logger.getLogger()
+    logger.debug("encoding Package %s with fuzziness %d", package, fuzziness)
     encoder = TlvEncoder()
     subpackages = []
     len = 0

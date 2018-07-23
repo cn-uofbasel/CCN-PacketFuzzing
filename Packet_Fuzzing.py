@@ -79,9 +79,9 @@ if __name__ == '__main__':
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        logger.debug("Package n° %d \n %s", packCount,package)
-        logger.debug("Package %d Size: %d",packCount, bytes.__len__())
+        logger.info("Package n° %d \n %s", packCount, package)
+        logger.info("Package %d Size: %d", packCount, bytes.__len__())
+        logger.debug("Package: %s", bytes)
         time.sleep(0.1)
-        #print(history)
-        packCount+=1
-
+        # print(history)
+        packCount += 1
