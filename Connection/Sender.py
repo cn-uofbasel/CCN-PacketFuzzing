@@ -20,7 +20,7 @@ class Sender:
     @:param port    The port as an integer
     """
     def __init__(self, ip, port):
-        logger = Logger()
+        logger = Logger.getLogger()
         try:
             #self.ip = ipaddress.ip_address('127.0.0.1')
             self.ip = "127.0.0.1"

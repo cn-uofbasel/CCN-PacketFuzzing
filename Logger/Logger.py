@@ -2,19 +2,27 @@ import logging
 import time
 
 
-class Logger(logging.Logger):
-    "Fuzzing Logger"
+def getLogger():
+    logger = logging.getLogger("Packet Fuzzing")
+    if len(logger.handlers) != 0:
+        return logger
+    logger.propagate = False
+    fileformatting = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s,%(lineno)d:\t%(message)s',
+                                       datefmt='%b %d %Y %H:%M:%S')
+    consoleformatting = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-    def __init__(self):
-        super().__init__(__name__, logging.DEBUG)
-        self.setLevel(logging.DEBUG)
-        formatting = logging.Formatter('%(asctime)s - Packet Fuzzing \t %(message)s')
-        consolehandler = logging.StreamHandler()
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        filehandler = logging.FileHandler(filename="Logfiles/" + timestr + ".log")
-        consolehandler.setFormatter(formatting)
-        filehandler.setFormatter(formatting)
-        consolehandler.setLevel(logging.INFO)
-        filehandler.setLevel(logging.DEBUG)
-        self.addHandler(consolehandler)
-        self.addHandler(filehandler)
+    consolehandler = logging.StreamHandler()
+
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    filehandler = logging.FileHandler(filename="Logfiles/" + timestr + ".log")
+
+    consolehandler.setFormatter(consoleformatting)
+    filehandler.setFormatter(fileformatting)
+
+    consolehandler.setLevel(logging.INFO)
+    filehandler.setLevel(logging.DEBUG)
+
+    # logger.setLevel(logging.DEBUG)
+    logger.addHandler(consolehandler)
+    logger.addHandler(filehandler)
+    return logger

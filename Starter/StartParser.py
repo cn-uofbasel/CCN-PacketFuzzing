@@ -2,7 +2,7 @@ import subprocess
 from subprocess import PIPE,CalledProcessError,Popen
 from Logger import Logger
 
-logger = Logger()
+logger = Logger.getLogger()
 
 """
 Methods to start a subprocess with the matching parser.

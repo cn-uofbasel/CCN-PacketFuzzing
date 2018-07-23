@@ -32,7 +32,9 @@ def getSelectedTypes(packageArgs):
 
 
 if __name__ == '__main__':
-    logger = Logger()
+    logger = Logger.getLogger()
+    logger.debug("starting")
+    logger.info("is starting")
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
     picn = ['picn','PiCN']
