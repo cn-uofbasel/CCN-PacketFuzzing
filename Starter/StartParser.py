@@ -13,7 +13,7 @@ def startCCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        logger.debug("Error:\n")
+        logger.error("Couldn't start CCN with path: " + path)
         logger.debug(e)
 
 def startPiCN(path):
@@ -22,7 +22,7 @@ def startPiCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        logger.debug("Error:\n")
+        logger.error("Couldn't start picn with path: " + path)
         logger.debug(e)
 
 
@@ -33,5 +33,5 @@ def startPyCN(path):
         df = subprocess.check_call(command, stdout=PIPE,shell=True)
         output, err = df.communicate()
     except CalledProcessError as e:
-        logger.debug("Error:\n")
+        logger.error("Couldn't start PyCN with path: " + path)
         logger.debug(e)
