@@ -41,6 +41,6 @@ class Sender:
     """
 
     def sendMessage(self, message):
-        logger = Logger()
+        logger = Logger.getLogger()
         logger.debug("Message in Bytes: \t %a",binascii.hexlify(message))
         self.socket.sendto(message, ('localhost', 9000))
