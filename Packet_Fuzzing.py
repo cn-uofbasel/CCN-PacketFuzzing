@@ -10,25 +10,38 @@ import sys
 import _thread
 from Starter import StartParser as start
 
+protocolToList = {
+    'NDN': PacketMaker.NDNPackages,
+    'CCNx': PacketMaker.CCNxPackages
+}
 
-def getSelectedTypes(packageArgs):
+
+def getSelectedTypes(packageArgs, pakets):
     if packageArgs != 0:
         typeList = []
         outString = "Selected packages: \t"
-        if 'n' in packageArgs:
-            typeList.append(PacketMaker.Packages.Name)
-            outString += "Name\t"
-        if 'd' in packageArgs:
-            typeList.append(PacketMaker.Packages.Data)
-            outString += "Data\t"
-        if 'i' in packageArgs:
-            typeList.append(PacketMaker.Packages.Interest)
-            outString += "Interest\t"
-        if 'l' in packageArgs:
-            typeList.append(PacketMaker.Packages.LinkObject)
-        return (typeList,outString)
+        if pakets == 'NDN':
+            if 'n' in packageArgs:
+                typeList.append(PacketMaker.NDNPackages.Name)
+                outString += "Name\t"
+            if 'd' in packageArgs:
+                typeList.append(PacketMaker.NDNPackages.Data)
+                outString += "Data\t"
+            if 'i' in packageArgs:
+                typeList.append(PacketMaker.NDNPackages.Interest)
+                outString += "Interest\t"
+            if 'l' in packageArgs:
+                typeList.append(PacketMaker.NDNPackages.LinkObject)
+        elif pakets == 'CCNx':
+            if 'i' in packageArgs:
+                typeList.append(PacketMaker.CCNxPackages.Interest)
+                outString += "Interest\t"
+            if 'c' in packageArgs:
+                typeList.append(PacketMaker.CCNxPackages.ContentOject)
+                outString += "ContentObject\t"
+        return typeList, outString
     else:
-        return (list(PacketMaker.Packages),"Selected packages: \tAll")
+        return (pakets, "Selected packages: \tAll")
 
 
 if __name__ == '__main__':
@@ -40,24 +53,32 @@ if __name__ == '__main__':
     parser.add_argument('parser', choices=ccn + pycn + picn, default='ccn', help="The parser which should be tested")
     parser.add_argument('path', help="Path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
-    parser.add_argument('-p', '--packages', help='The package type to be sent',nargs='+', required=False, default=0, type=str, choices=['n','d','l','i'])
+    subparser = parser.add_subparsers(help='parses the protocoll options', dest='protocoll')
+    ndnparser = subparser.add_parser("NDN")
+    ndnparser.add_argument('-p', '--packages', help='The package type to be sent', nargs='+', required=False, default=0,
+                           type=str, choices=['n', 'd', 'l', 'i'])
+    ccnxparser = subparser.add_parser("CCNx")
+    ccnxparser.add_argument('-p', '--packages', help='The package type to be sent', nargs='+', required=False,
+                            default=0,
+                            type=str, choices=['i', 'c'])
     args = parser.parse_args()
+    print(args)
     Encode.setFuzziness(args.fuzziness)
     if not os.path.exists(args.path):
         errString = "The path "+args.path+" does not exist on this machine"
         sys.exit(errString)
-
+    pakets = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startCCN,(args.path,))
+        # _thread.start_new_thread(start.startCCN,(args.path,))
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPyCN,(args.path,))
+        #_thread.start_new_thread(start.startPyCN,(args.path,))
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPiCN,(args.path,))
+        #_thread.start_new_thread(start.startPiCN,(args.path,))
 
     time.sleep(5)
 
@@ -67,9 +88,13 @@ if __name__ == '__main__':
 
     # TODO Check if parser is still running
 
-    (types,outString) = getSelectedTypes(args.packages)
+    try:
+        (types, outString) = getSelectedTypes(args.packages, args.protocoll)
+    except AttributeError:
+        types = protocolToList[args.protocoll]
+        outString = "Selected packages: \tAll"
     logger.debug(outString)
-
+    print(types)
     packCount = 0
     while (_thread._count() > 0):
         # loop
@@ -82,4 +107,5 @@ if __name__ == '__main__':
         time.sleep(0.1)
         #print(history)
         packCount+=1
+
 

@@ -134,18 +134,10 @@ def makeCCNxContentObject():
     return
 
 
-makePackageNDN = {NDNPackages.Name: makeNamePacket(),
-                  NDNPackages.Data: makeDataPacket(),
-                  NDNPackages.Interest: makeInterestPacket(),
-                  NDNPackages.LinkObject: makeLinkObject()
-                  }
-
-makePackageCCNx = {
-    CCNxPackages.Interest: makeCCNxInterest(),
-    CCNxPackages.ContentOject: makeCCNxContentObject()
-}
-
-packageTypes = {
-    PackageTypes.NDN: makePackageNDN,
-    PackageTypes.CCNx: makePackageCCNx
-}
+makePackage = {NDNPackages.Name: makeNamePacket(),
+               NDNPackages.Data: makeDataPacket(),
+               NDNPackages.Interest: makeInterestPacket(),
+               NDNPackages.LinkObject: makeLinkObject(),
+               CCNxPackages.Interest: makeCCNxInterest(),
+               CCNxPackages.ContentOject: makeCCNxContentObject()
+               }
