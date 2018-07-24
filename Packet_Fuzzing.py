@@ -46,8 +46,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     Encode.setFuzziness(args.fuzziness)
     if not os.path.exists(args.path):
-        errString = "The path "+args.path+" does not exist on this machine"
-        sys.exit(errString)
+        logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
+        sys.exit(1)
 
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
