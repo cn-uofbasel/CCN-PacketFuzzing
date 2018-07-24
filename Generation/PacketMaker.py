@@ -4,11 +4,21 @@ import random
 from enum import Enum
 
 
-class Packages(Enum):
+class NDNPackages(Enum):
     Name = 0
     Interest = 1
     Data = 2
     LinkObject = 3
+
+
+class CCNxPackages(Enum):
+    Interest = 0
+    ContentOject = 1
+
+
+class PackageTypes(Enum):
+    NDN = 0
+    CCNx = 1
 
 
 def makeBasicPackage(name, type):
@@ -60,6 +70,7 @@ def makeLinkContent():
     cpackage = makeDelegation()
     length = randomLength(1)
     return Package("LinkContent", enc.Tlv.ContentType, length, [cpackage])
+
 
 def makeNamePacket():
     gncpackage = makeGenericNameComponent()
@@ -115,8 +126,26 @@ def randomLength(subpackes=1):
     return random.randint(0, 20 * subpackes)
 
 
-makePackage = {Packages.Name: makeNamePacket(),
-               Packages.Data: makeDataPacket(),
-               Packages.Interest: makeInterestPacket(),
-               Packages.LinkObject: makeLinkObject()
-               }
+def makeCCNxInterest():
+    return
+
+
+def makeCCNxContentObject():
+    return
+
+
+makePackageNDN = {NDNPackages.Name: makeNamePacket(),
+                  NDNPackages.Data: makeDataPacket(),
+                  NDNPackages.Interest: makeInterestPacket(),
+                  NDNPackages.LinkObject: makeLinkObject()
+                  }
+
+makePackageCCNx = {
+    CCNxPackages.Interest: makeCCNxInterest(),
+    CCNxPackages.ContentOject: makeCCNxContentObject()
+}
+
+packageTypes = {
+    PackageTypes.NDN: makePackageNDN,
+    PackageTypes.CCNx: makePackageCCNx
+}
