@@ -33,6 +33,7 @@ class Sender:
         logger.debug("Port set to %d" % self.port)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         logger.debug("Socket created.")
+        logger.info("opened connection")
 
     """
     Method that uses the UDP socket to send the given message. 

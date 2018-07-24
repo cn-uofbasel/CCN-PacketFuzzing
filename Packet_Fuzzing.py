@@ -76,11 +76,12 @@ if __name__ == '__main__':
     while (_thread._count() > 0):
         # loop
         package = PacketMaker.makePackage[random.choice(list(types))]
-        logger.info("Package n° %d \n %s", packCount, package)
+        logger.info("Package n° %d \t %s", packCount, package)
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        logger.info("Package %d Size: %d", packCount, bytes.__len__())
+        logger.info("Package n° %d Size: %d", packCount, bytes.__len__())
+        logger.info("Package ° %d depth: %d",packCount,package.getDepth())
         time.sleep(0.1)
         # print(history)
         packCount += 1

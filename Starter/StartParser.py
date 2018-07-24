@@ -15,9 +15,7 @@ def startCCN(path):
     command = path+"/build/bin/ccn-lite-relay -v99 -u 9000"
     try:
         logger = Logger.getLogger()
-        #df = subprocess.check_call(command, stdout= None,shell=True,timeout=10)
-        #output, err = df.communicate()
-        f = open("workfile", mode="w+")
+        f = open("Logfiles/ccn-lite "+time.strftime("%Y%m%d-%H%M%S")+".log", mode="w+")
         proc = Popen(command, stderr=f,shell=True)
         time.sleep(10)
         proc.kill()
