@@ -129,18 +129,19 @@ def randomLength(subpackes=1):
 def makeCCNxName():
     subpackages = []
     for x in range(random.randint(0, 20)):
-        p = makeBasicTLVPackage("Name Segment", "T_NAME_SEGMENT")
+        p = makeBasicTLVPackage("Name Segment", 0x0001)
         subpackages.append(p)
     length = randomLength(len(subpackages))
-    return TLVPackage("Name", "T_NAME", length, subpackages)
+    return TLVPackage("Name", 0x0000, length, subpackages)
 
 
 def makeKeyIdRestriciton():
-    return makeBasicTLVPackage("KeyIdRestriction", "T_KEYIDRESTR")
+    return makeBasicTLVPackage("KeyIdRestriction", 0x0002)
 
 
 def makeContentObjectHashRestriciton():
-    return makeBasicTLVPackage("ContentObjectHashRestriction", "T_OBJHASHRESTR")
+    return makeBasicTLVPackage("ContentObjectHashRestriction", 0x0003)
+
 
 def makeCCNxInterest():
     subpackages = []
@@ -154,15 +155,16 @@ def makeCCNxInterest():
         cohrp = makeContentObjectHashRestriciton()
         subpackages.append(cohrp)
     length = randomLength(len(subpackages))
-    return TLVPackage("Interest", "T_INTEREST", length, subpackages)
+    return TLVPackage("Interest", 0x0001, length, subpackages)
 
 
 def makePayloadType():
-    return makeBasicTLVPackage("Payload", "T_PAYLDTYPE")
+    return makeBasicTLVPackage("Payload", 0x0005)
 
 
 def makeExpiriyTime():
-    return TLVPackage("ExpiryTime", "T_EXPIRY", 8)
+    return TLVPackage("ExpiryTime", 0x0006, 8)
+
 
 def makeCCNxContentObject():
     subpackages = []
@@ -176,8 +178,7 @@ def makeCCNxContentObject():
         extp = makeExpiriyTime()
         subpackages.append(extp)
     length = randomLength(len(subpackages))
-    return TLVPackage("ContentOject", "T_OBJECT", length, subpackages)
-    return
+    return TLVPackage("ContentOject", 0x0002, length, subpackages)
 
 
 makePackage = {NDNPackages.Name: makeNamePacket(),

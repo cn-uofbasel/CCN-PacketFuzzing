@@ -64,7 +64,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     Encode.setFuzziness(args.fuzziness)
-    if (args.protocoll is None):
+    if args.protocoll is None:
         args.protocoll = "NDN"
     if not os.path.exists(args.path):
         errString = "The path "+args.path+" does not exist on this machine"
@@ -100,8 +100,11 @@ if __name__ == '__main__':
     while (packCount < 3):
         # loop
         package = PacketMaker.makePackage[random.choice(list(types))]
-        bytes = Encode.encodePackage(package)
-        sender.sendMessage(bytes.tobytes())
+        if args.protocoll == "NDN":
+            bytes = Encode.encodeNDNPackage(package)
+        elif args.protocoll == "CCNx":
+            bytes = Encode.encodeCCNxPackage(package)
+        # sender.sendMessage(bytes.tobytes())
         print(bytes.tobytes())
         history.append((package, bytes))
         logger.debug("Package n° %d \n %s", packCount,package)

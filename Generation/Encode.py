@@ -1,14 +1,17 @@
 from pyndn.encoding import TlvEncoder
 import random
 import os
+from Generation.Encoder import CCNxEncoder
 
 fuzziness = 1
 
+
 def setFuzziness(fuzz):
     global fuzziness
-    fuzziness= fuzz
+    fuzziness = fuzz
 
-def encodePackage(package):
+
+def encodeNDNPackage(package):
     global fuzziness
     encoder = TlvEncoder()
     subpackages = []
@@ -16,7 +19,7 @@ def encodePackage(package):
     if package.subpackages != None:
         subpackages = package.subpackages
         for p in reversed(subpackages):
-            encoder.writeBuffer(encodePackage(p))
+            encoder.writeBuffer(encodeNDNPackage(p))
         len = encoder.getOutput().__len__()
         if (fuzziness < 2):
             package.len = len
@@ -29,9 +32,16 @@ def encodePackage(package):
     return encoder.getOutput()
 
 
+def encodeCCNxPackage(package):
+    encoder = CCNxEncoder()
+    encoder.writeNumber(40)
+    encoder.writeNumber(1120)
+    return
+
+
 def randomData(len):
     random.random()
     offset = 0
     if (fuzziness > 0):
-        offset = random.randint(-len,len)
-    return bytes(os.urandom(len+offset))
+        offset = random.randint(-len, len)
+    return bytes(os.urandom(len + offset))
