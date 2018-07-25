@@ -36,5 +36,5 @@ class CCNxEncoder:
         if (len(self._buffer) < length):
             newArray = bytearray(length)
             # Copy into newArray at offset.
-            newArray[:len(self._buffer)] = self._buffer
+            newArray[-len(self._buffer):] = self._buffer
             self._buffer = newArray

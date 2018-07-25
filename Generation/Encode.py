@@ -36,6 +36,12 @@ def encodeCCNxPackage(package):
     encoder = CCNxEncoder()
     encoder.writeNumber(40)
     encoder.writeNumber(1120)
+    encoder.writeNumber(40)
+    encoder.writeNumber(1120)
+    encoder.writeNumber(40)
+    encoder.writeNumber(1120)
+    encoder.writeNumber(40)
+    encoder.writeNumber(1120)
     return
 
 
