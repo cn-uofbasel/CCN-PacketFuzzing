@@ -41,7 +41,7 @@ def getSelectedTypes(packageArgs, pakets):
                 outString += "ContentObject\t"
         return typeList, outString
     else:
-        return (pakets, "Selected packages: \tAll")
+        return (protocolToList[pakets], "Selected packages: \tAll")
 
 
 if __name__ == '__main__':
@@ -64,6 +64,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     Encode.setFuzziness(args.fuzziness)
+    if (args.protocoll is None):
+        args.protocoll = "NDN"
     if not os.path.exists(args.path):
         errString = "The path "+args.path+" does not exist on this machine"
         sys.exit(errString)
@@ -94,13 +96,13 @@ if __name__ == '__main__':
         types = protocolToList[args.protocoll]
         outString = "Selected packages: \tAll"
     logger.debug(outString)
-    print(types)
     packCount = 0
-    while (_thread._count() > 0):
+    while (packCount < 3):
         # loop
         package = PacketMaker.makePackage[random.choice(list(types))]
         bytes = Encode.encodePackage(package)
         sender.sendMessage(bytes.tobytes())
+        print(bytes.tobytes())
         history.append((package, bytes))
         logger.debug("Package n° %d \n %s", packCount,package)
         logger.debug("Package %d Size: %d",packCount, bytes.__len__())

@@ -1,4 +1,7 @@
-class Package:
+from Logger import Logger
+
+
+class TLVPackage:
 
     def __init__(self, name, type, len, subpackages=None):
         """Represents a NDN Package with all necesary data to randomize length and value
@@ -26,3 +29,4 @@ class Package:
             subpackages = str(self.subpackages)
             string += "with subpackages " + subpackages
         return string
+
