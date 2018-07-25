@@ -34,15 +34,9 @@ def encodeNDNPackage(package):
 
 def encodeCCNxPackage(package):
     encoder = CCNxEncoder()
-    encoder.writeNumber(40)
-    encoder.writeNumber(1120)
-    encoder.writeNumber(40)
-    encoder.writeNumber(1120)
-    encoder.writeNumber(40)
-    encoder.writeNumber(1120)
-    encoder.writeNumber(40)
-    encoder.writeNumber(1120)
-    return
+    encoder.writeNumberFixedSize(30, 1)
+    encoder.writeNumber(4)
+    return encoder.getOutput()
 
 
 def randomData(len):

@@ -11,11 +11,12 @@ class CCNxEncoder:
             bytes = number.to_bytes(size, byteorder='big')
             newlength = self._length + size
             self.ensurelength(newlength)
-            self._buffer[-newlength:-self._length] = bytes
+            for x in range(newlength - self._length):
+                self._buffer[-newlength + x] = bytes[x]
             self._length = newlength
         except OverflowError:
             logger = Logger()
-            logger.error("Number %d doesn't fit in size %d", number, size)
+            logger.error("Number %d doesn't fit in %d byte(s)", number, size)
 
     def writeNumber(self, number):
         size = 1
@@ -38,3 +39,7 @@ class CCNxEncoder:
             # Copy into newArray at offset.
             newArray[-len(self._buffer):] = self._buffer
             self._buffer = newArray
+
+    def getOutput(self):
+        return memoryview(
+            self._buffer)[len(self._buffer) - self._length:]
