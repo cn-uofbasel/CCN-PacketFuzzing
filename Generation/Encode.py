@@ -34,8 +34,18 @@ def encodeNDNPackage(package):
 
 def encodeCCNxPackage(package):
     encoder = CCNxEncoder()
-    encoder.writeNumberFixedSize(30, 1)
-    encoder.writeNumber(4)
+    subpackages = []
+    length = 0
+    if package.subpackages is not None:
+        for p in reversed(package.subpackages):
+            encoder.writeMemoryView(encodeCCNxPackage(p))
+        length = encoder.getOutput().__len__()
+        package.len = length
+    else:
+        data = randomData(package.len)
+        encoder.writeBuffer(data)
+        length = data.__len__()
+    package.rlen = length
     return encoder.getOutput()
 
 
@@ -44,4 +54,4 @@ def randomData(len):
     offset = 0
     if (fuzziness > 0):
         offset = random.randint(-len, len)
-    return bytes(os.urandom(len + offset))
+    return os.urandom(len + offset)

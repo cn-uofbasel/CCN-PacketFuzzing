@@ -10,7 +10,7 @@ class CCNxEncoder:
         try:
             bytes = number.to_bytes(size, byteorder='big')
             newlength = self._length + size
-            self.ensurelength(newlength)
+            self._ensurelength(newlength)
             for x in range(newlength - self._length):
                 self._buffer[-newlength + x] = bytes[x]
             self._length = newlength
@@ -27,18 +27,33 @@ class CCNxEncoder:
             except OverflowError:
                 size += 1
         newlength = self._length + size
-        self.ensurelength(newlength)
+        self._ensurelength(newlength)
         for x in range(newlength - self._length):
             self._buffer[-newlength + x] = bytes[x]
         self._length = newlength
         print(self._buffer)
 
-    def ensurelength(self, length):
+    def _ensurelength(self, length):
         if (len(self._buffer) < length):
             newArray = bytearray(length)
             # Copy into newArray at offset.
             newArray[-len(self._buffer):] = self._buffer
             self._buffer = newArray
+
+    def writeBuffer(self, buffer):
+        newlength = self._length + len(buffer)
+        self._ensurelength(newlength)
+        for x in range(newlength - self._length):
+            self._buffer[-newlength + x] = buffer[x]
+        print(self._buffer)
+
+    def writeMemoryView(self, view):
+        newlength = self._length + len(view.obj)
+        self._ensurelength(newlength)
+        for x in range(newlength - self._length):
+            self._buffer[-newlength + x] = view.obj[x]
+        self._length = newlength
+
 
     def getOutput(self):
         return memoryview(
