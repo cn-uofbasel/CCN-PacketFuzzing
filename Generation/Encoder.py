@@ -45,7 +45,6 @@ class CCNxEncoder:
         self._ensurelength(newlength)
         for x in range(newlength - self._length):
             self._buffer[-newlength + x] = buffer[x]
-        print(self._buffer)
 
     def writeMemoryView(self, view):
         newlength = self._length + len(view.obj)
@@ -53,6 +52,9 @@ class CCNxEncoder:
         for x in range(newlength - self._length):
             self._buffer[-newlength + x] = view.obj[x]
         self._length = newlength
+
+    def __len__(self):
+        return self._length
 
 
     def getOutput(self):
