@@ -31,7 +31,6 @@ class CCNxEncoder:
         for x in range(newlength - self._length):
             self._buffer[-newlength + x] = bytes[x]
         self._length = newlength
-        print(self._buffer)
 
     def _ensurelength(self, length):
         if (len(self._buffer) < length):

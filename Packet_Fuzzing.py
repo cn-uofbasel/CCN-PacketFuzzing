@@ -63,7 +63,6 @@ if __name__ == '__main__':
                             default=0,
                             type=str, choices=['i', 'c'])
     args = parser.parse_args()
-    print(args)
     Encode.setFuzziness(args.fuzziness)
     if args.protocoll is None:
         args.protocoll = "NDN"
@@ -73,15 +72,15 @@ if __name__ == '__main__':
     pakets = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        # _thread.start_new_thread(start.startCCN,(args.path,))
+        _thread.start_new_thread(start.startCCN, (args.path,))
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        #_thread.start_new_thread(start.startPyCN,(args.path,))
+        _thread.start_new_thread(start.startPyCN, (args.path,))
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        #_thread.start_new_thread(start.startPiCN,(args.path,))
+        _thread.start_new_thread(start.startPiCN, (args.path,))
 
     time.sleep(5)
 
@@ -105,8 +104,7 @@ if __name__ == '__main__':
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":
             bytes = Encode.encodeCCNxPackage(package)
-        # sender.sendMessage(bytes.tobytes())
-        print(bytes.hex())
+        sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
         logger.debug("Package n° %d \n %s", packCount,package)
         logger.debug("Package %d Size: %d",packCount, bytes.__len__())
