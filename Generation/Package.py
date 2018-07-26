@@ -1,5 +1,9 @@
 from Logger import Logger
 
+"""
+Module for packet datastructures.
+Used to represent in build packages to be able to plan packages before building them as bytes
+"""
 
 class TLVPackage:
 

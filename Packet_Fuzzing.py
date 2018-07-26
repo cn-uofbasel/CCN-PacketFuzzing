@@ -11,6 +11,13 @@ import _thread
 from Starter import StartParser as start
 import binascii
 
+"""
+Main startpoint to invoke a fuzzer.
+reads the args, starts the selected parser and opens connection via UDP to it.
+Then random packets are generated and send. All reactions are stored into logfiles.
+"""
+
+
 protocolToList = {
     'NDN': PacketMaker.NDNPackages,
     'CCNx': PacketMaker.CCNxPackages
@@ -18,6 +25,12 @@ protocolToList = {
 
 
 def getSelectedTypes(packageArgs, pakets):
+    """
+    extracts the selected pakettypes from the args
+    :param packageArgs: args field containing the selected packages
+    :param pakets: the selected packet format
+    :return: tuple of a list containing the enums of the selected packages and a description string for logging
+    """
     if packageArgs != 0:
         typeList = []
         outString = "Selected packages: \t"
@@ -47,6 +60,7 @@ def getSelectedTypes(packageArgs, pakets):
 
 if __name__ == '__main__':
     logger = Logger()
+    # setup argsparser
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
     picn = ['picn','PiCN']
@@ -63,6 +77,7 @@ if __name__ == '__main__':
                             default=0,
                             type=str, choices=['i', 'c'])
     args = parser.parse_args()
+    # extract args and setup parser and connection
     Encode.setFuzziness(args.fuzziness)
     if args.protocoll is None:
         args.protocoll = "NDN"
@@ -87,9 +102,6 @@ if __name__ == '__main__':
     # TODO Check if port 9000 is also used on PyCN-lite
     sender = Sender("127.0.0.1", 9000)
     history = []
-
-    # TODO Check if parser is still running
-
     try:
         (types, outString) = getSelectedTypes(args.packages, args.protocoll)
     except AttributeError:
@@ -97,8 +109,8 @@ if __name__ == '__main__':
         outString = "Selected packages: \tAll"
     logger.debug(outString)
     packCount = 0
+    # send packages
     while (packCount < 3):
-        # loop
         package = PacketMaker.makePackage[random.choice(list(types))]
         if args.protocoll == "NDN":
             bytes = Encode.encodeNDNPackage(package)

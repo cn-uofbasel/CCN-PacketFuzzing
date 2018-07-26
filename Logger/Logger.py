@@ -1,7 +1,10 @@
 import logging
 
 class Logger(logging.Logger):
-    "Fuzzing Logger"
+    """
+    Fuzzing Logger
+    Simple Singelton Logger for file and stdout logging.
+    """
 
     def __init__(self):
         super().__init__("Packet Fuzzing", logging.DEBUG)

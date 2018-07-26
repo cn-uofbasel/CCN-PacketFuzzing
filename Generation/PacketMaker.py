@@ -3,6 +3,9 @@ from Generation.Package import TLVPackage
 import random
 from enum import Enum
 
+"""
+Building functions for packets. Top level packets can be accessed through makePackage.
+"""
 
 class NDNPackages(Enum):
     Name = 0
@@ -21,170 +24,170 @@ class PackageTypes(Enum):
     CCNx = 1
 
 
-def makeBasicTLVPackage(name, type):
-    len = randomLength()
+def _makeBasicTLVPackage(name, type):
+    len = _randomLength()
     return TLVPackage(name, type, len)
 
 
-def makeGenericNameComponent():
-    return makeBasicTLVPackage("NameComponent", enc.Tlv.NameComponent)
+def _makeGenericNameComponent():
+    return _makeBasicTLVPackage("NameComponent", enc.Tlv.NameComponent)
 
 
-def makeImplicitSha256DigestComponent():
-    return makeBasicTLVPackage("ImplicitSha256DigestComponent", enc.Tlv.ImplicitSha256DigestComponent)
+def _makeImplicitSha256DigestComponent():
+    return _makeBasicTLVPackage("ImplicitSha256DigestComponent", enc.Tlv.ImplicitSha256DigestComponent)
 
 
-def makeSignatureType():
-    return makeBasicTLVPackage("SignatureType", enc.Tlv.SignatureType)
+def _makeSignatureType():
+    return _makeBasicTLVPackage("SignatureType", enc.Tlv.SignatureType)
 
 
-def makeSignatureInfo():
-    len = randomLength()
-    stpackage = makeSignatureType()
+def _makeSignatureInfo():
+    len = _randomLength()
+    stpackage = _makeSignatureType()
     return TLVPackage("SignatureInfo", enc.Tlv.SignatureInfo, len, [stpackage])
 
 
-def makeSignatureValue():
-    return makeBasicTLVPackage("SignatureValue", enc.Tlv.SignatureValue)
+def _makeSignatureValue():
+    return _makeBasicTLVPackage("SignatureValue", enc.Tlv.SignatureValue)
 
 
-def makeMetaInfo():
-    return makeBasicTLVPackage("MetaInfo", enc.Tlv.MetaInfo)
+def _makeMetaInfo():
+    return _makeBasicTLVPackage("MetaInfo", enc.Tlv.MetaInfo)
 
 
-def makePreference():
-    return makeBasicTLVPackage("Preference", enc.Tlv.Link_Preference)
+def _makePreference():
+    return _makeBasicTLVPackage("Preference", enc.Tlv.Link_Preference)
 
 
 def makeDelegation():
     subpackages = []
-    ppackage = makePreference()
+    ppackage = _makePreference()
     subpackages.append(ppackage)
-    npackage = makeNamePacket()
+    npackage = _makeNamePacket()
     subpackages.append(npackage)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     return TLVPackage("Delegation", enc.Tlv.Link_Delegation, length, subpackages)
 
 
-def makeLinkContent():
+def _makeLinkContent():
     cpackage = makeDelegation()
-    length = randomLength(1)
+    length = _randomLength(1)
     return TLVPackage("LinkContent", enc.Tlv.ContentType, length, [cpackage])
 
 
-def makeNamePacket():
-    gncpackage = makeGenericNameComponent()
-    isdpackage = makeImplicitSha256DigestComponent()
-    length = randomLength(2)
+def _makeNamePacket():
+    gncpackage = _makeGenericNameComponent()
+    isdpackage = _makeImplicitSha256DigestComponent()
+    length = _randomLength(2)
     npackage = TLVPackage("Name", enc.Tlv.Name, length, [gncpackage, isdpackage])
     return npackage
 
 
-def makeInterestPacket():
+def _makeInterestPacket():
     subpackages = []
-    npackage = makeNamePacket()
+    npackage = _makeNamePacket()
     subpackages.append(npackage)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     ipackage = TLVPackage("Interest", enc.Tlv.Interest, length, subpackages)
     return ipackage
 
 
-def makeDataPacket():
+def _makeDataPacket():
     subpackages = []
-    npackage = makeNamePacket()
+    npackage = _makeNamePacket()
     subpackages.append(npackage)
-    mipackage = makeMetaInfo()
+    mipackage = _makeMetaInfo()
     subpackages.append(mipackage)
-    sipackage = makeSignatureInfo()
+    sipackage = _makeSignatureInfo()
     subpackages.append(sipackage)
-    svpackage = makeSignatureValue()
+    svpackage = _makeSignatureValue()
     subpackages.append(svpackage)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     datpackage = TLVPackage("Data", enc.Tlv.Data, length, subpackages)
     return datpackage
 
 
-def makeLinkObject():
+def _makeLinkObject():
     subpackages = []
-    npackage = makeNamePacket()
+    npackage = _makeNamePacket()
     subpackages.append(npackage)
-    mipackage = makeMetaInfo()
+    mipackage = _makeMetaInfo()
     subpackages.append(mipackage)
-    lcpackage = makeLinkContent()
+    lcpackage = _makeLinkContent()
     subpackages.append(lcpackage)
-    sipackage = makeSignatureInfo()
+    sipackage = _makeSignatureInfo()
     subpackages.append(sipackage)
-    svpackage = makeSignatureValue()
+    svpackage = _makeSignatureValue()
     subpackages.append(svpackage)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     linkObject = TLVPackage("LinkObject", enc.Tlv.Data, length, subpackages)
     return linkObject
 
 
-def randomLength(subpackes=1):
+def _randomLength(subpackes=1):
     random.random()
     return random.randint(0, 40 * subpackes)
 
 
-def makeCCNxName():
+def _makeCCNxName():
     subpackages = []
     for x in range(random.randint(0, 8)):
-        p = makeBasicTLVPackage("Name Segment", 0x0001)
+        p = _makeBasicTLVPackage("Name Segment", 0x0001)
         subpackages.append(p)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     return TLVPackage("Name", 0x0000, length, subpackages)
 
 
-def makeKeyIdRestriciton():
-    return makeBasicTLVPackage("KeyIdRestriction", 0x0002)
+def _makeKeyIdRestriciton():
+    return _makeBasicTLVPackage("KeyIdRestriction", 0x0002)
 
 
-def makeContentObjectHashRestriciton():
-    return makeBasicTLVPackage("ContentObjectHashRestriction", 0x0003)
+def _makeContentObjectHashRestriciton():
+    return _makeBasicTLVPackage("ContentObjectHashRestriction", 0x0003)
 
 
-def makeCCNxInterest():
+def _makeCCNxInterest():
     subpackages = []
-    namep = makeCCNxName()
+    namep = _makeCCNxName()
     subpackages.append(namep)
     x = random.randint(0, 3)
     if x % 2 is 1:
-        kidp = makeKeyIdRestriciton()
+        kidp = _makeKeyIdRestriciton()
         subpackages.append(kidp)
     if x > 1:
-        cohrp = makeContentObjectHashRestriciton()
+        cohrp = _makeContentObjectHashRestriciton()
         subpackages.append(cohrp)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     return TLVPackage("Interest", 0x0000, length, subpackages)
 
 
-def makePayloadType():
-    return makeBasicTLVPackage("Payload", 0x0005)
+def _makePayloadType():
+    return _makeBasicTLVPackage("Payload", 0x0005)
 
 
-def makeExpiriyTime():
+def _makeExpiriyTime():
     return TLVPackage("ExpiryTime", 0x0006, 8)
 
 
-def makeCCNxContentObject():
+def _makeCCNxContentObject():
     subpackages = []
-    namep = makeCCNxName()
+    namep = _makeCCNxName()
     subpackages.append(namep)
     x = random.randint(0, 3)
     if x % 2 is 1:
-        ptp = makePayloadType()
+        ptp = _makePayloadType()
         subpackages.append(ptp)
     if x > 1:
-        extp = makeExpiriyTime()
+        extp = _makeExpiriyTime()
         subpackages.append(extp)
-    length = randomLength(len(subpackages))
+    length = _randomLength(len(subpackages))
     return TLVPackage("ContentOject", 0x0002, length, subpackages)
 
 
-makePackage = {NDNPackages.Name: makeNamePacket(),
-               NDNPackages.Data: makeDataPacket(),
-               NDNPackages.Interest: makeInterestPacket(),
-               NDNPackages.LinkObject: makeLinkObject(),
-               CCNxPackages.Interest: makeCCNxInterest(),
-               CCNxPackages.ContentOject: makeCCNxContentObject()
+makePackage = {NDNPackages.Name: _makeNamePacket(),
+               NDNPackages.Data: _makeDataPacket(),
+               NDNPackages.Interest: _makeInterestPacket(),
+               NDNPackages.LinkObject: _makeLinkObject(),
+               CCNxPackages.Interest: _makeCCNxInterest(),
+               CCNxPackages.ContentOject: _makeCCNxContentObject()
                }
