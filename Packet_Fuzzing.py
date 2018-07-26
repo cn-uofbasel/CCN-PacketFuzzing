@@ -100,7 +100,11 @@ if __name__ == '__main__':
     packCount = 0
     while (packCount < 3):
         # loop
-        package = PacketMaker.makePackage[random.choice(list(types))]
+        try:
+            package = PacketMaker.makePackage[random.choice(list(types))]
+        except OverflowError:
+            logger = Logger()
+            logger.warning("A package grew to large. Skipping it")
         if args.protocoll == "NDN":
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":

@@ -7,16 +7,13 @@ class CCNxEncoder:
         self._length = 0
 
     def writeNumberFixedSize(self, number, size):
-        try:
-            bytes = number.to_bytes(size, byteorder='big')
-            newlength = self._length + size
-            self._ensurelength(newlength)
-            for x in range(newlength - self._length):
-                self._buffer[-newlength + x] = bytes[x]
-            self._length = newlength
-        except OverflowError:
-            logger = Logger()
-            logger.error("Number %d doesn't fit in %d byte(s)", number, size)
+        bytes = number.to_bytes(size, byteorder='big')
+        newlength = self._length + size
+        self._ensurelength(newlength)
+        for x in range(newlength - self._length):
+            self._buffer[-newlength + x] = bytes[x]
+        self._length = newlength
+
 
     def writeNumber(self, number):
         size = 1

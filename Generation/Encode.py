@@ -75,7 +75,7 @@ def encodeCCNxPackage(package):
             encoder.writeNumberFixedSize(random.randint(1, 255), 1)  # return code
             encoder.writeNumberFixedSize(random.randint(0, 255), 1)  # hoplimit
             encoder.writeNumberFixedSize(length, 2)  # packet length
-            encoder.writeNumberFixedSize(package.type + 1, 1)  # PT_RETURN
+            encoder.writeNumberFixedSize(package.type + 1, 1)  # PT_RETURNc
     encoder.writeNumberFixedSize(1, 1)  # Version
     return encoder.getOutput()
 
