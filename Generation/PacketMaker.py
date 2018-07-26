@@ -128,7 +128,7 @@ def randomLength(subpackes=1):
 
 def makeCCNxName():
     subpackages = []
-    for x in range(random.randint(0, 20)):
+    for x in range(random.randint(0, 8)):
         p = makeBasicTLVPackage("Name Segment", 0x0001)
         subpackages.append(p)
     length = randomLength(len(subpackages))
@@ -155,7 +155,7 @@ def makeCCNxInterest():
         cohrp = makeContentObjectHashRestriciton()
         subpackages.append(cohrp)
     length = randomLength(len(subpackages))
-    return TLVPackage("Interest", 0x0001, length, subpackages)
+    return TLVPackage("Interest", 0x0000, length, subpackages)
 
 
 def makePayloadType():

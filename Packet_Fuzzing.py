@@ -9,6 +9,7 @@ import os
 import sys
 import _thread
 from Starter import StartParser as start
+import binascii
 
 protocolToList = {
     'NDN': PacketMaker.NDNPackages,
@@ -105,7 +106,7 @@ if __name__ == '__main__':
         elif args.protocoll == "CCNx":
             bytes = Encode.encodeCCNxPackage(package)
         # sender.sendMessage(bytes.tobytes())
-        print(bytes.tobytes())
+        print(bytes.hex())
         history.append((package, bytes))
         logger.debug("Package n° %d \n %s", packCount,package)
         logger.debug("Package %d Size: %d",packCount, bytes.__len__())
