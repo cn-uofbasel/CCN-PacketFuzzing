@@ -44,6 +44,8 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
     parser.add_argument('-p', '--packages', help='The package type to be sent',nargs='+', required=False, default=0, type=str, choices=['n','d','l','i'])
     args = parser.parse_args()
+    for arg in vars(args):
+        logger.info("%s set to %s", arg, args.__getattribute__(arg))
     Encode.setFuzziness(args.fuzziness)
     if not os.path.exists(args.path):
         logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
@@ -62,7 +64,9 @@ if __name__ == '__main__':
         _thread.start_new_thread(start.startPiCN,(args.path,))
 
     time.sleep(5)
-
+    if (_thread._count() == 0):
+        logger.error("Looks like parser couldn't be started. Stopping")
+        sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
     sender = Sender("127.0.0.1", 9000)
     history = []
