@@ -4,6 +4,10 @@ import pathlib
 
 
 def getLogger():
+    """
+    Fuzzing Logger
+    Simple Singelton Logger for file and stdout logging.
+    """
     logger = logging.getLogger("Packet Fuzzing")
     if len(logger.handlers) != 0:
         return logger

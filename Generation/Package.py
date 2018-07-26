@@ -1,4 +1,11 @@
-class Package:
+from Logger import Logger
+
+"""
+Module for packet datastructures.
+Used to represent in build packages to be able to plan packages before building them as bytes
+"""
+
+class TLVPackage:
 
     def __init__(self, name, type, len, subpackages=None):
         """Represents a NDN Package with all necesary data to randomize length and value
@@ -28,6 +35,7 @@ class Package:
         return string
 
     def getDepth(self):
+        """"returns the maximum TLV-Depth like in a tree"""
         if (self.subpackages is None):
             return 0
         else:
