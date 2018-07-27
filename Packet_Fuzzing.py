@@ -66,8 +66,10 @@ if __name__ == '__main__':
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
     picn = ['picn','PiCN']
+    none = ['offline']
     parser = argparse.ArgumentParser(description='Packet fuzzer')
-    parser.add_argument('parser', choices=ccn + pycn + picn, default='ccn', help="The parser which should be tested")
+    parser.add_argument('parser', choices=ccn + pycn + picn + none, default='ccn',
+                        help="The parser which should be tested")
     parser.add_argument('path', help="Path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
     subparser = parser.add_subparsers(help='parses the protocoll options', dest='protocoll')
@@ -100,13 +102,16 @@ if __name__ == '__main__':
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
         _thread.start_new_thread(start.startPiCN, (args.path,))
+    elif args.parser in none:
+        logger.info("staring without parser")
 
     time.sleep(5)
-    if (_thread._count() == 0):
+    if (args.parser not in none) and (_thread._count() == 0):
         logger.error("Looks like parser couldn't be started. Stopping")
         sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
-    sender = Sender("127.0.0.1", 9000)
+    if (args.parser not in none):
+        sender = Sender("127.0.0.1", 9000)
     history = []
     try:
         (types, outString) = getSelectedTypes(args.packages, args.protocoll)
@@ -117,7 +122,7 @@ if __name__ == '__main__':
 
     packCount = 0
     # send packages
-    while (_thread._count() > 0):
+    while (args.parser in none) or (_thread._count() > 0):
         # loop
         while True:
             try:
@@ -131,7 +136,8 @@ if __name__ == '__main__':
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":
             bytes = Encode.encodeCCNxPackage(package)
-        sender.sendMessage(bytes.tobytes())
+        if (args.parser not in none):
+            sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
         logger.info("Package n° %d Size: %d", packCount, bytes.__len__())
         logger.info("Package n° %d depth: %d",packCount,package.getDepth())
