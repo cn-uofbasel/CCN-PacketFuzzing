@@ -11,6 +11,13 @@ import _thread
 from Starter import StartParser as start
 import binascii
 
+"""
+Main startpoint to invoke a fuzzer.
+reads the args, starts the selected parser and opens connection via UDP to it.
+Then random packets are generated and send. All reactions are stored into logfiles.
+"""
+
+
 protocolToList = {
     'NDN': PacketMaker.NDNPackages,
     'CCNx': PacketMaker.CCNxPackages
@@ -18,6 +25,12 @@ protocolToList = {
 
 
 def getSelectedTypes(packageArgs, pakets):
+    """
+    extracts the selected pakettypes from the args
+    :param packageArgs: args field containing the selected packages
+    :param pakets: the selected packet format
+    :return: tuple of a list containing the enums of the selected packages and a description string for logging
+    """
     if packageArgs != 0:
         typeList = []
         outString = "Selected packages: \t"
@@ -46,7 +59,10 @@ def getSelectedTypes(packageArgs, pakets):
 
 
 if __name__ == '__main__':
-    logger = Logger()
+    logger = Logger.getLogger()
+    logger.debug("starting")
+    logger.info("is starting")
+    # setup argsparser
     ccn = ['ccn', 'ccn-lite']
     pycn = ['py-cn', 'PyCN-lite']
     picn = ['picn','PiCN']
@@ -63,59 +79,63 @@ if __name__ == '__main__':
                             default=0,
                             type=str, choices=['i', 'c'])
     args = parser.parse_args()
-    print(args)
+    # extract args and setup parser and connection
+    for arg in vars(args):
+        logger.info("%s set to %s", arg, args.__getattribute__(arg))
     Encode.setFuzziness(args.fuzziness)
     if args.protocoll is None:
         args.protocoll = "NDN"
     if not os.path.exists(args.path):
-        errString = "The path "+args.path+" does not exist on this machine"
-        sys.exit(errString)
-    pakets = None
+        logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
+        sys.exit(1)
+    paktes = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        # _thread.start_new_thread(start.startCCN,(args.path,))
+        _thread.start_new_thread(start.startCCN, (args.path,))
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        #_thread.start_new_thread(start.startPyCN,(args.path,))
+        _thread.start_new_thread(start.startPyCN, (args.path,))
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        #_thread.start_new_thread(start.startPiCN,(args.path,))
+        _thread.start_new_thread(start.startPiCN, (args.path,))
 
     time.sleep(5)
-
+    if (_thread._count() == 0):
+        logger.error("Looks like parser couldn't be started. Stopping")
+        sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
     sender = Sender("127.0.0.1", 9000)
     history = []
-
-    # TODO Check if parser is still running
-
     try:
         (types, outString) = getSelectedTypes(args.packages, args.protocoll)
     except AttributeError:
         types = protocolToList[args.protocoll]
         outString = "Selected packages: \tAll"
     logger.debug(outString)
+
     packCount = 0
-    while (packCount < 3):
+    # send packages
+    while (_thread._count() > 0):
         # loop
-        try:
-            package = PacketMaker.makePackage[random.choice(list(types))]
-        except OverflowError:
-            logger = Logger()
-            logger.warning("A package grew to large. Skipping it")
+        while True:
+            try:
+                package = PacketMaker.makePackage[random.choice(list(types))]
+                logger.info("Package n° %d \t %s", packCount, package)
+                break
+            except OverflowError:
+                logger = Logger()
+                logger.warning("A package grew to large. Skipping it")
         if args.protocoll == "NDN":
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":
             bytes = Encode.encodeCCNxPackage(package)
-        # sender.sendMessage(bytes.tobytes())
-        print(bytes.hex())
+        sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        logger.debug("Package n° %d \n %s", packCount,package)
-        logger.debug("Package %d Size: %d",packCount, bytes.__len__())
+        logger.info("Package n° %d Size: %d", packCount, bytes.__len__())
+        logger.info("Package n° %d depth: %d",packCount,package.getDepth())
         time.sleep(0.1)
-        #print(history)
-        packCount+=1
-
+        # print(history)
+        packCount += 1
 

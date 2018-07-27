@@ -1,5 +1,9 @@
 from Logger import Logger
 
+"""
+Module for packet datastructures.
+Used to represent in build packages to be able to plan packages before building them as bytes
+"""
 
 class TLVPackage:
 
@@ -24,9 +28,18 @@ class TLVPackage:
         type = str(self.type)
         len = str(self.len)
         rlen = str(self.rlen)
-        string = self.name + "(" + type + ")" + "| written length: " + len + "| real length: " + rlen + "\n"
+        string = self.name + "(" + type + ")" + "| written length: " + len + "| real length: " + rlen + "\t"
         if self.subpackages != None:
             subpackages = str(self.subpackages)
-            string += "with subpackages " + subpackages
+            string += "with subpackages \n\t"+ subpackages
         return string
 
+    def getDepth(self):
+        """"returns the maximum TLV-Depth like in a tree"""
+        if (self.subpackages is None):
+            return 0
+        else:
+            depth = []
+            for p in self.subpackages:
+                depth.append(p.getDepth())
+            return max(depth)+1

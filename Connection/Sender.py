@@ -20,7 +20,7 @@ class Sender:
     @:param port    The port as an integer
     """
     def __init__(self, ip, port):
-        logger = Logger()
+        logger = Logger.getLogger()
         try:
             #self.ip = ipaddress.ip_address('127.0.0.1')
             self.ip = "127.0.0.1"
@@ -33,6 +33,7 @@ class Sender:
         logger.debug("Port set to %d" % self.port)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         logger.debug("Socket created.")
+        logger.info("opened connection")
 
     """
     Method that uses the UDP socket to send the given message. 
@@ -41,6 +42,6 @@ class Sender:
     """
 
     def sendMessage(self, message):
-        logger = Logger()
+        logger = Logger.getLogger()
         logger.debug("Message in Bytes: \t %a",binascii.hexlify(message))
         self.socket.sendto(message, ('localhost', 9000))

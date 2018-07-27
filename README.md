@@ -1,2 +1,3 @@
-# Packet_Fuzzing
-Packet Fuzzing Software
+# CCN-PacketFuzzing
+
+Packet Fuzzer for CCN Packet Formats. 
