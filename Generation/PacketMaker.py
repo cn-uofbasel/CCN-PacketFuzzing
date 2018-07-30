@@ -74,12 +74,30 @@ def _makeLinkContent():
     length = _randomLength(1)
     return TLVPackage("LinkContent", enc.Tlv.ContentType, length, [cpackage])
 
-
 def _makeNamePacket():
-    gncpackage = _makeGenericNameComponent()
-    isdpackage = _makeImplicitSha256DigestComponent()
-    length = _randomLength(2)
-    npackage = TLVPackage("Name", enc.Tlv.Name, length, [gncpackage, isdpackage])
+    subpackages = []
+    for x in range(random.randint(0, 8)):
+        subpackages.append(_makeNameComponentPacket())
+    length = _randomLength(len(subpackages))
+    return TLVPackage("Name", enc.Tlv.Name, length, subpackages)
+
+
+def _makeOtherTypeComponent():
+    r = range(2, 8) + range(9, 65535)
+    return _makeBasicTLVPackage("OtherTypeComponent", random.choice(r))
+
+
+def _makeNameComponentPacket():
+    rand = random.randint(0, 2)
+    subpackages = []
+    if rand == 0:
+        subpackages.append(_makeGenericNameComponent())
+    elif rand == 1:
+        subpackages.append(_makeImplicitSha256DigestComponent())
+    else:
+        subpackages.append(_makeOtherTypeComponent())
+    length = _randomLength(len(subpackages))
+    npackage = TLVPackage("NameComponent", enc.Tlv.NameComponent, length, subpackages)
     return npackage
 
 
