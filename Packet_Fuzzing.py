@@ -35,12 +35,6 @@ def getSelectedTypes(packageArgs, pakets):
         typeList = []
         outString = "Selected packages: \t"
         if pakets == 'NDN':
-            if 'n' in packageArgs:
-                typeList.append(PacketMaker.NDNPackages.Name)
-                outString += "Name\t"
-            if 'd' in packageArgs:
-                typeList.append(PacketMaker.NDNPackages.Data)
-                outString += "Data\t"
             if 'i' in packageArgs:
                 typeList.append(PacketMaker.NDNPackages.Interest)
                 outString += "Interest\t"
@@ -75,7 +69,7 @@ if __name__ == '__main__':
     subparser = parser.add_subparsers(help='parses the protocoll options', dest='protocoll')
     ndnparser = subparser.add_parser("NDN")
     ndnparser.add_argument('-p', '--packages', help='The package type to be sent', nargs='+', required=False, default=0,
-                           type=str, choices=['n', 'd', 'l', 'i'])
+                           type=str, choices=['l', 'i'])
     ccnxparser = subparser.add_parser("CCNx")
     ccnxparser.add_argument('-p', '--packages', help='The package type to be sent', nargs='+', required=False,
                             default=0,

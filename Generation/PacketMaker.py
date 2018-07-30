@@ -7,11 +7,10 @@ from enum import Enum
 Building functions for packets. Top level packets can be accessed through makePackage.
 """
 
+
 class NDNPackages(Enum):
-    Name = 0
-    Interest = 1
-    Data = 2
-    LinkObject = 3
+    Interest = 0
+    LinkObject = 1
 
 
 class CCNxPackages(Enum):
@@ -24,13 +23,38 @@ class PackageTypes(Enum):
     CCNx = 1
 
 
-def _makeBasicTLVPackage(name, type):
-    len = _randomLength()
+def _makeBasicTLVPackage(name, type, len=-1):
+    if len == -1:
+        len = _randomLength()
     return TLVPackage(name, type, len)
+
+
+def _getOptional(makefunc, propability=0.5):
+    rand = random.randint(0, 1 / propability)
+    if rand == 1:
+        return makefunc()
+    else:
+        return None
 
 
 def _makeGenericNameComponent():
     return _makeBasicTLVPackage("NameComponent", enc.Tlv.NameComponent)
+
+
+def _makeNonce():
+    return _makeBasicTLVPackage("Nonce", enc.Tlv.Nonce, len=4)
+
+
+def _makeInterestLifetime():
+    return _makeBasicTLVPackage("InterestLifeTime", enc.Tlv.InterestLifetime)
+
+
+def _makeHopLimit():
+    return _makeBasicTLVPackage("HopLimit", 34, len=1)  # not in pyndn
+
+
+def _makeParameters():
+    return _makeBasicTLVPackage("Parameters", 35)  # not in pyndn
 
 
 def _makeImplicitSha256DigestComponent():
@@ -41,25 +65,72 @@ def _makeSignatureType():
     return _makeBasicTLVPackage("SignatureType", enc.Tlv.SignatureType)
 
 
+def _makeKeyDigest():
+    return _makeBasicTLVPackage("KeyDigest", enc.Tlv.KeyLocatorDigest)
+
+
+def _makeKeyLocator():
+    subpackages = []
+    r = random.randint(0, 1)
+    if r == 0:
+        subpackages.append(_makeNamePacket())
+    else:
+        subpackages.append(_makeKeyDigest())
+    return TLVPackage("KeyLocator", enc.Tlv.KeyLocator, _randomLength(1), subpackages)
+
+
 def _makeSignatureInfo():
-    len = _randomLength()
+    subpackages = []
     stpackage = _makeSignatureType()
-    return TLVPackage("SignatureInfo", enc.Tlv.SignatureInfo, len, [stpackage])
+    subpackages.append(stpackage)
+    klPackage = _getOptional(_makeKeyLocator)
+    if klPackage is not None:
+        subpackages.append(klPackage)
+    length = _randomLength(len(subpackages))
+    return TLVPackage("SignatureInfo", enc.Tlv.SignatureInfo, length, subpackages)
 
 
 def _makeSignatureValue():
     return _makeBasicTLVPackage("SignatureValue", enc.Tlv.SignatureValue)
 
 
+def _makeContentType():
+    return _makeBasicTLVPackage("ContentType", enc.Tlv.ContentType)
+
+
+def _makeFreshnessPeriod():
+    return _makeBasicTLVPackage("FreshnessPeriod", enc.Tlv.FreshnessPeriod)
+
+
+def _makeFinalBlockId():
+    ncpackage = _makeNameComponentPacket()
+    return TLVPackage("FinalBlockId", enc.Tlv.FinalBlockId, _randomLength(1), [ncpackage])
+
+
+def _makeContent():
+    return _makeBasicTLVPackage("Content", enc.Tlv.Content)
+
+
 def _makeMetaInfo():
-    return _makeBasicTLVPackage("MetaInfo", enc.Tlv.MetaInfo)
+    subpackages = []
+    ctpackage = _getOptional(_makeContentType)
+    if ctpackage is not None:
+        subpackages.append(ctpackage)
+    fppackage = _getOptional(_makeFreshnessPeriod)
+    if (fppackage is not None):
+        subpackages.append(fppackage)
+    fbidpackage = _getOptional(_makeFinalBlockId)
+    if (fbidpackage is not None):
+        subpackages.append(fbidpackage)
+    length = _randomLength(len(subpackages))
+    return TLVPackage("MetaInfo", enc.Tlv.MetaInfo, length, subpackages)
 
 
 def _makePreference():
     return _makeBasicTLVPackage("Preference", enc.Tlv.Link_Preference)
 
 
-def makeDelegation():
+def _makeDelegation():
     subpackages = []
     ppackage = _makePreference()
     subpackages.append(ppackage)
@@ -70,34 +141,93 @@ def makeDelegation():
 
 
 def _makeLinkContent():
-    cpackage = makeDelegation()
-    length = _randomLength(1)
-    return TLVPackage("LinkContent", enc.Tlv.ContentType, length, [cpackage])
+    subpackages = []
+    for x in range(1, 6):
+        cpackage = _makeDelegation()
+        subpackages.append(cpackage)
+    length = _randomLength(len(subpackages))
+    return TLVPackage("LinkContent", enc.Tlv.ContentType, length, subpackages)
+
+
+def _makeMustBeFresh():
+    return _makeBasicTLVPackage("MustBeFresh", enc.Tlv.MustBeFresh, len=0)
 
 
 def _makeNamePacket():
-    gncpackage = _makeGenericNameComponent()
-    isdpackage = _makeImplicitSha256DigestComponent()
-    length = _randomLength(2)
-    npackage = TLVPackage("Name", enc.Tlv.Name, length, [gncpackage, isdpackage])
-    return npackage
+    subpackages = []
+    for x in range(random.randint(0, 8)):
+        subpackages.append(_makeNameComponentPacket())
+    length = _randomLength(len(subpackages))
+    return TLVPackage("Name", enc.Tlv.Name, length, subpackages)
+
+
+def _makeOtherTypeComponent():
+    r = list(range(2, 65535))
+    r.remove(8)
+    return _makeBasicTLVPackage("OtherTypeComponent", random.choice(r))
+
+
+def _makeNameComponentPacket():
+    rand = random.randint(0, 2)
+    if rand == 0:
+        return _makeGenericNameComponent()
+    elif rand == 1:
+        return _makeImplicitSha256DigestComponent()
+    else:
+        return _makeOtherTypeComponent()
+
+
+def _makeCanBePrefix():
+    return _makeBasicTLVPackage("CanBePrefix", 33, len=0)  # not in pynndn encoding
 
 
 def _makeInterestPacket():
     subpackages = []
     npackage = _makeNamePacket()
     subpackages.append(npackage)
+    cbppackage = _getOptional(_makeCanBePrefix)
+    if cbppackage is not None:
+        subpackages.append(cbppackage)
+    fhpackage = _getOptional(_makeForwardingHint)
+    if fhpackage is not None:
+        subpackages.append(fhpackage)
+    mbfpackage = _getOptional(_makeMustBeFresh)
+    if mbfpackage is not None:
+        subpackages.append(mbfpackage)
+    nopackage = _getOptional(_makeNonce)
+    if nopackage is not None:
+        subpackages.append(nopackage)
+    ilpackage = _getOptional(_makeInterestLifetime)
+    if ilpackage is not None:
+        subpackages.append(ilpackage)
+    hplpackage = _getOptional(_makeHopLimit)
+    if hplpackage is not None:
+        subpackages.append(hplpackage)
+    ppackage = _getOptional(_makeParameters)
+    if ppackage is not None:
+        subpackages.append(ppackage)
     length = _randomLength(len(subpackages))
     ipackage = TLVPackage("Interest", enc.Tlv.Interest, length, subpackages)
     return ipackage
 
 
+def _makeForwardingHint():
+    subpackages = []
+    for x in range(1, 6):
+        subpackages.append(_makeDelegation())
+    length = _randomLength(len(subpackages))
+    return TLVPackage("ForwardingHint", enc.Tlv.ForwardingHint, length, subpackages)
+
 def _makeDataPacket():
     subpackages = []
     npackage = _makeNamePacket()
     subpackages.append(npackage)
-    mipackage = _makeMetaInfo()
-    subpackages.append(mipackage)
+    mipackage = _getOptional(_makeMetaInfo)
+    if mipackage is not None:
+        subpackages.append(mipackage)
+    cpackage = _getOptional(_makeContent)
+    if cpackage is not None:
+        subpackages.append(cpackage)
     sipackage = _makeSignatureInfo()
     subpackages.append(sipackage)
     svpackage = _makeSignatureValue()
@@ -184,9 +314,7 @@ def _makeCCNxContentObject():
     return TLVPackage("ContentOject", 0x0002, length, subpackages)
 
 
-makePackage = {NDNPackages.Name: _makeNamePacket(),
-               NDNPackages.Data: _makeDataPacket(),
-               NDNPackages.Interest: _makeInterestPacket(),
+makePackage = {NDNPackages.Interest: _makeInterestPacket(),
                NDNPackages.LinkObject: _makeLinkObject(),
                CCNxPackages.Interest: _makeCCNxInterest(),
                CCNxPackages.ContentOject: _makeCCNxContentObject()
