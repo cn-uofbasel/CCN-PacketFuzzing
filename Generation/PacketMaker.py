@@ -190,6 +190,9 @@ def _makeInterestPacket():
     cbppackage = _getOptional(_makeCanBePrefix)
     if cbppackage is not None:
         subpackages.append(cbppackage)
+    fhpackage = _getOptional(_makeForwardingHint)
+    if fhpackage is not None:
+        subpackages.append(fhpackage)
     mbfpackage = _getOptional(_makeMustBeFresh)
     if mbfpackage is not None:
         subpackages.append(mbfpackage)
@@ -209,6 +212,13 @@ def _makeInterestPacket():
     ipackage = TLVPackage("Interest", enc.Tlv.Interest, length, subpackages)
     return ipackage
 
+
+def _makeForwardingHint():
+    subpackages = []
+    for x in range(1, 6):
+        subpackages.append(_makeDelegation())
+    length = _randomLength(len(subpackages))
+    return TLVPackage("ForwardingHint", enc.Tlv.ForwardingHint, length, subpackages)
 
 def _makeDataPacket():
     subpackages = []
