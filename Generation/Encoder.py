@@ -21,20 +21,17 @@ class CCNxEncoder:
 
     def writeNumberFixedSize(self, number, size):
         """
-        writes a number into the buffer and adds padding for the given size.
-        :param number: the value to write
-        :param size: size in bytes
-        """
-        try:
-            bytes = number.to_bytes(size, byteorder='big')
-            newlength = self._length + size
-            self._ensurelength(newlength)
-            for x in range(newlength - self._length):
-                self._buffer[-newlength + x] = bytes[x]
-            self._length = newlength
-        except OverflowError:
-            logger = Logger()
-            logger.error("Number %d doesn't fit in %d byte(s)", number, size)
+                writes a number into the buffer and adds padding for the given size.
+                :param number: the value to write
+                :param size: size in bytes
+                """
+        bytes = number.to_bytes(size, byteorder='big')
+        newlength = self._length + size
+        self._ensurelength(newlength)
+        for x in range(newlength - self._length):
+            self._buffer[-newlength + x] = bytes[x]
+        self._length = newlength
+
 
     def writeNumber(self, number):
         """

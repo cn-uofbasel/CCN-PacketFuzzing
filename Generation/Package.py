@@ -39,7 +39,7 @@ class TLVPackage:
         if (self.subpackages is None):
             return 0
         else:
-            depth = []
+            depth = [0]
             for p in self.subpackages:
                 depth.append(p.getDepth())
             return max(depth)+1
