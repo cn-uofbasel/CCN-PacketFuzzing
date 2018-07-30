@@ -143,9 +143,12 @@ def _makeDelegation():
 
 
 def _makeLinkContent():
-    cpackage = _makeDelegation()
-    length = _randomLength(1)
-    return TLVPackage("LinkContent", enc.Tlv.ContentType, length, [cpackage])
+    subpackages = []
+    for x in range(1, 6):
+        cpackage = _makeDelegation()
+        subpackages.append(cpackage)
+    length = _randomLength(len(subpackages))
+    return TLVPackage("LinkContent", enc.Tlv.ContentType, length, subpackages)
 
 
 def _makeMustBeFresh():
