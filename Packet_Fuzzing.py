@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 logger.info("Package n° %d \t %s", packCount, package)
                 break
             except OverflowError:
-                logger.warning("A package grew to large. Skipping it"
+                logger.warning("A package grew to large. Skipping it")
         if args.protocoll == "NDN":
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":
