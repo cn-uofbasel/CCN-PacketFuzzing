@@ -120,15 +120,15 @@ if __name__ == '__main__':
     while (_thread._count() > 0):
         # loop
         package = PacketMaker.makePackage[random.choice(list(types))]
-        logger.info("Package n° %d \t %s", packCount, package)
+        logger.info("Package no %d \t %s", packCount, package)
         if args.protocoll == "NDN":
             bytes = Encode.encodeNDNPackage(package)
         elif args.protocoll == "CCNx":
             bytes = Encode.encodeCCNxPackage(package)
         sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
-        logger.info("Package n° %d Size: %d", packCount, bytes.__len__())
-        logger.info("Package n° %d depth: %d",packCount,package.getDepth())
+        logger.info("Package no %d Size: %d", packCount, bytes.__len__())
+        logger.info("Package no %d depth: %d", packCount, package.getDepth())
         time.sleep(0.1)
         # print(history)
         packCount += 1
