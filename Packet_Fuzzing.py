@@ -126,7 +126,10 @@ if __name__ == '__main__':
 
     packCount = 0
     # send packages
-    while ((args.parser in none) or (_thread._count() > 0)) and (args.counter == -1 or packCount < args.counter):
+    while (args.counter == -1 or packCount < args.counter):
+        if not (args.parser in none) and _thread._count() == 0:
+            logger.warning("lost parser")
+            break
         # loop
         while True:
             try:
