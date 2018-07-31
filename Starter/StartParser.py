@@ -47,7 +47,7 @@ def startPiCN(path):
 
 def startPyCN(path):
     #TODO implement the starting command for
-    command = path + "/srv_fwd.py 127.0.0.1:9000"
+    command = path + "/pycn_lite/bin/srv_fwd.py 127.0.0.1:9000"
     try:
         logger = Logger.getLogger()
         f = open("Logfiles/pycn " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
