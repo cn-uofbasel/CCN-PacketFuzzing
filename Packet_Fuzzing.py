@@ -52,6 +52,12 @@ def getSelectedTypes(packageArgs, pakets):
         return (protocolToList[pakets], "Selected packages: \tAll")
 
 
+def check_positive(value):
+    ivalue = int(value)
+    if ivalue <= 0:
+        raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
+    return ivalue
+
 if __name__ == '__main__':
     logger = Logger.getLogger()
     logger.debug("starting")
@@ -66,6 +72,10 @@ if __name__ == '__main__':
                         help="The parser which should be tested")
     parser.add_argument('path', help="Path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
+    parser.add_argument('-s', '--sleep', help='Milliseconds to sleep between the Packages', default=100, type=int,
+                        choices=range(100, 2100, 100), metavar=[100 - 2000], required=False)
+    parser.add_argument('-c', '--counter', help='Number of Packets to generate', type=check_positive, default=-1,
+                        required=False)
     subparser = parser.add_subparsers(help='parses the protocoll options', dest='protocoll')
     ndnparser = subparser.add_parser("NDN")
     ndnparser.add_argument('-p', '--packages', help='The package type to be sent', nargs='+', required=False, default=0,
@@ -116,7 +126,7 @@ if __name__ == '__main__':
 
     packCount = 0
     # send packages
-    while (args.parser in none) or (_thread._count() > 0):
+    while ((args.parser in none) or (_thread._count() > 0)) and (args.counter == -1 or packCount < args.counter):
         # loop
         while True:
             try:
@@ -134,7 +144,7 @@ if __name__ == '__main__':
         history.append((package, bytes))
         logger.info("Package no %d Size: %d", packCount, bytes.__len__())
         logger.info("Package no %d depth: %d", packCount, package.getDepth())
-        time.sleep(0.1)
+        time.sleep(args.sleep / 1000)
         # print(history)
         packCount += 1
 
