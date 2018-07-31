@@ -64,7 +64,7 @@ if __name__ == '__main__':
     logger.info("is starting")
     # setup argsparser
     ccn = ['ccn', 'ccn-lite']
-    pycn = ['py-cn', 'PyCN-lite']
+    pycn = ['pycn', 'PyCN-lite']
     picn = ['picn','PiCN']
     none = ['offline']
     parser = argparse.ArgumentParser(description='Packet fuzzer')
