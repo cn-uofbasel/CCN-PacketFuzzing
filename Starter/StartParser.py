@@ -17,7 +17,7 @@ def startCCN(path):
         pathlib.Path('Logfiles/ccn-lite').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/ccn-lite/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f)
-        return proc, 'ccn-lite'
+        return proc
         #logger.debug(output)
     except CalledProcessError as e:
         logger.error("Couldn't start CCN with path: " + path)
@@ -35,7 +35,7 @@ def startPiCN(path):
         pathlib.Path('Logfiles/picn').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/picn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
-        return proc, 'PyCN-lite'
+        return proc
     except CalledProcessError as e:
         logger.error("Couldn't start picn with path: " + path)
         logger.debug(e)
@@ -52,7 +52,7 @@ def startPyCN(path):
         pathlib.Path('Logfiles/pycn').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/pycn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
-        return proc, 'PiCN'
+        return proc
     except CalledProcessError as e:
         logger.error("Couldn't start PyCN with path: " + path)
         logger.debug(e)

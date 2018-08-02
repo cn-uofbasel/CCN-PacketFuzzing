@@ -106,15 +106,15 @@ if __name__ == '__main__':
     paktes = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        proc, name = start.startCCN(args.path)
+        proc= start.startCCN(args.path)
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        proc, name = start.startPyCN(args.path)
+        proc = start.startPyCN(args.path)
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        proc, name = start.startPiCN(args.path)
+        proc = start.startPiCN(args.path)
     elif args.parser in none:
         logger.info("staring without parser")
 
@@ -161,10 +161,11 @@ if __name__ == '__main__':
         packCount += 1
     if (check_proc_alive(proc)):
         proc.kill()
+    if (subparser is not None):
         out = subprocess.check_output(['ps', '-A', 'H'])
         out = out.decode('ascii')
         for line in out.splitlines():
-            if name in line:
+            if args.path in line:
                 print(line)
                 # pid = int(line.split(None, 1)[0])
                 # os.kill(pid, signal.SIGKILL)
