@@ -63,7 +63,7 @@ def check_proc_alive(proc):
     if proc is not None:
         return proc.poll() is None
     else:
-        return True
+        return False
 
 if __name__ == '__main__':
     logger = Logger.getLogger()

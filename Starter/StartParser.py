@@ -1,8 +1,7 @@
 import subprocess
 from subprocess import PIPE,CalledProcessError,Popen
 from Logger import Logger
-import sys
-import io
+import pathlib
 import time
 
 
@@ -15,6 +14,7 @@ def startCCN(path):
     command = path+"/build/bin/ccn-lite-relay -v99 -u 9000"
     try:
         logger = Logger.getLogger()
+        pathlib.Path('Logfiles/ccn-lite').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/ccn-lite/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f)
         return proc
@@ -32,6 +32,7 @@ def startPiCN(path):
     command = path +"/starter/picn-relay --format ndntlv -l debug --port 9000"
     try:
         logger = Logger.getLogger()
+        pathlib.Path('Logfiles/picn').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/picn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
         return proc
@@ -48,6 +49,7 @@ def startPyCN(path):
     command = path + ""
     try:
         logger = Logger.getLogger()
+        pathlib.Path('Logfiles/pycn').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/pycn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
         return proc
