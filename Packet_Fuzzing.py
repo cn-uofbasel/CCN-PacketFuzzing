@@ -161,8 +161,7 @@ if __name__ == '__main__':
         packCount += 1
     if (check_proc_alive(proc)):
         proc.kill()
-        p = subprocess.Popen(['ps', '-A', 'H'], stdout=subprocess.PIPE)
-        out, err = p.communicate()
+        out = subprocess.check_output(['ps', '-A', 'H'])
         for line in out.splitlines():
             if name in line:
                 print(line)
