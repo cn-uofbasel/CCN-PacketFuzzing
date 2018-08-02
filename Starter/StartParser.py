@@ -15,7 +15,7 @@ def startCCN(path):
     command = path+"/build/bin/ccn-lite-relay -v99 -u 9000"
     try:
         logger = Logger.getLogger()
-        f = open("Logfiles/ccn-lite "+time.strftime("%Y%m%d-%H%M%S")+".log", mode="w+")
+        f = open("Logfiles/ccn-lite/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f)
         return proc
         #logger.debug(output)
@@ -32,7 +32,7 @@ def startPiCN(path):
     command = path +"/starter/picn-relay --format ndntlv -l debug --port 9000"
     try:
         logger = Logger.getLogger()
-        f = open("Logfiles/picn " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
+        f = open("Logfiles/picn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
         return proc
     except CalledProcessError as e:
@@ -48,7 +48,7 @@ def startPyCN(path):
     command = path + ""
     try:
         logger = Logger.getLogger()
-        f = open("Logfiles/pycn " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
+        f = open("Logfiles/pycn/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
         return proc
     except CalledProcessError as e:
