@@ -162,6 +162,7 @@ if __name__ == '__main__':
     if (check_proc_alive(proc)):
         proc.kill()
         out = subprocess.check_output(['ps', '-A', 'H'])
+        out = out.decode('ascii')
         for line in out.splitlines():
             if name in line:
                 print(line)
