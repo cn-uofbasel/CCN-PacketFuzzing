@@ -97,15 +97,15 @@ if __name__ == '__main__':
     paktes = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startCCN, (args.path,))
+        proc = start.startCCN(args.path)
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPyCN, (args.path,))
+        proc = start.startPyCN(args.path)
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPiCN, (args.path,))
+        proc = start.startPiCN(args.path)
     elif args.parser in none:
         logger.info("staring without parser")
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     packCount = 0
     # send packages
     while (args.counter == -1 or packCount < args.counter):
-        if not (args.parser in none) and _thread._count() == 0:
+        if not (args.parser in none) and proc.poll() is not None:
             logger.warning("lost parser")
             break
         # loop
@@ -150,4 +150,4 @@ if __name__ == '__main__':
         time.sleep(args.sleep / 1000)
         # print(history)
         packCount += 1
-
+    proc.kill()

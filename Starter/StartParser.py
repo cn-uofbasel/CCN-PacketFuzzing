@@ -17,8 +17,7 @@ def startCCN(path):
         logger = Logger.getLogger()
         f = open("Logfiles/ccn-lite "+time.strftime("%Y%m%d-%H%M%S")+".log", mode="w+")
         proc = Popen(command, stderr=f)
-        time.sleep(10)
-        proc.kill()
+        return proc
         #logger.debug(output)
     except CalledProcessError as e:
         logger.error("Couldn't start CCN with path: " + path)
@@ -35,8 +34,7 @@ def startPiCN(path):
         logger = Logger.getLogger()
         f = open("Logfiles/picn " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
-        time.sleep(10)
-        proc.kill()
+        return proc
     except CalledProcessError as e:
         logger.error("Couldn't start picn with path: " + path)
         logger.debug(e)
@@ -52,8 +50,7 @@ def startPyCN(path):
         logger = Logger.getLogger()
         f = open("Logfiles/pycn " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
         proc = Popen(command, stderr=f, shell=True)
-        time.sleep(10)
-        proc.kill()
+        return proc
     except CalledProcessError as e:
         logger.error("Couldn't start PyCN with path: " + path)
         logger.debug(e)
