@@ -160,7 +160,7 @@ if __name__ == '__main__':
         # print(history)
         packCount += 1
     proc.kill()
-    p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ps', '-A H'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
         print(line)
