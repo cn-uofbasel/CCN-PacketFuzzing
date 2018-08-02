@@ -16,7 +16,7 @@ def startCCN(path):
         logger = Logger.getLogger()
         pathlib.Path('Logfiles/ccn-lite').mkdir(parents=True, exist_ok=True)
         f = open("Logfiles/ccn-lite/ " + time.strftime("%Y%m%d-%H%M%S") + ".log", mode="w+")
-        proc = Popen(command, stderr=f)
+        proc = Popen(command, stderr=f,shell=True)
         return proc
         #logger.debug(output)
     except CalledProcessError as e:

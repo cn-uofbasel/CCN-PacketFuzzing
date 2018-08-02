@@ -166,6 +166,7 @@ if __name__ == '__main__':
         out = out.decode('ascii')
         for line in out.splitlines():
             if args.path in line:
-                print(line)
-                # pid = int(line.split(None, 1)[0])
-                # os.kill(pid, signal.SIGKILL)
+                if '9000' in line:
+                    pid = int(line.split(None, 1)[0])
+                    logger.info("Looks like process %d %s is an artifact, killing it",pid,line)
+                    os.kill(pid, signal.SIGKILL)
