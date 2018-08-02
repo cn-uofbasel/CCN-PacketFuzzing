@@ -110,7 +110,7 @@ if __name__ == '__main__':
         logger.info("staring without parser")
 
     time.sleep(5)
-    if (args.parser not in none) and (_thread._count() == 0):
+    if (args.parser not in none) and (proc.poll() is not None):
         logger.error("Looks like parser couldn't be started. Stopping")
         sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
