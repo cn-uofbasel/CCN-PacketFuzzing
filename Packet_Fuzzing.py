@@ -58,6 +58,13 @@ def check_positive(value):
         raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
     return ivalue
 
+
+def check_proc_alive(proc):
+    if proc is not None:
+        return proc.poll() is None
+    else:
+        return True
+
 if __name__ == '__main__':
     logger = Logger.getLogger()
     logger.debug("starting")
@@ -110,7 +117,7 @@ if __name__ == '__main__':
         logger.info("staring without parser")
 
     time.sleep(5)
-    if (args.parser not in none) and (proc.poll() is not None):
+    if (args.parser not in none) and (not check_proc_alive(proc)):
         logger.error("Looks like parser couldn't be started. Stopping")
         sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
@@ -127,7 +134,7 @@ if __name__ == '__main__':
     packCount = 0
     # send packages
     while (args.counter == -1 or packCount < args.counter):
-        if not (args.parser in none) and proc.poll() is not None:
+        if not (args.parser in none) and not check_proc_alive(proc):
             logger.warning("lost parser")
             break
         # loop
