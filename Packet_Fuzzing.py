@@ -106,15 +106,15 @@ if __name__ == '__main__':
     paktes = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        proc = start.startCCN(args.path)
+        proc, name = start.startCCN(args.path)
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        proc = start.startPyCN(args.path)
+        proc, name = start.startPyCN(args.path)
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        proc = start.startPiCN(args.path)
+        proc, name = start.startPiCN(args.path)
     elif args.parser in none:
         logger.info("staring without parser")
 
@@ -159,11 +159,12 @@ if __name__ == '__main__':
         time.sleep(args.sleep / 1000)
         # print(history)
         packCount += 1
-    proc.kill()
-    p = subprocess.Popen(['ps', '-A', 'H'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-        print(line)
-        # if 'iChat' in line:
-        # pid = int(line.split(None, 1)[0])
-        # os.kill(pid, signal.SIGKILL)
+    if (check_proc_alive(proc)):
+        proc.kill()
+        p = subprocess.Popen(['ps', '-A', 'H'], stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        for line in out.splitlines():
+            if name in line:
+                print(line)
+                # pid = int(line.split(None, 1)[0])
+                # os.kill(pid, signal.SIGKILL)
