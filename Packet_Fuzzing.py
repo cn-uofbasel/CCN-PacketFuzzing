@@ -10,6 +10,8 @@ import sys
 import _thread
 from Starter import StartParser as start
 import binascii
+import subprocess
+import signal
 
 """
 Main startpoint to invoke a fuzzer.
@@ -158,3 +160,10 @@ if __name__ == '__main__':
         # print(history)
         packCount += 1
     proc.kill()
+    p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+        print(line)
+        # if 'iChat' in line:
+        # pid = int(line.split(None, 1)[0])
+        # os.kill(pid, signal.SIGKILL)

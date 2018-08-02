@@ -3,7 +3,7 @@ import time
 import pathlib
 
 
-def getLogger():
+def getLogger(consolelevel=logging.INFO, filelevel=logging.DEBUG):
     """
     Fuzzing Logger
     Simple Singelton Logger for file and stdout logging.
@@ -25,8 +25,8 @@ def getLogger():
     consolehandler.setFormatter(consoleformatting)
     filehandler.setFormatter(fileformatting)
 
-    consolehandler.setLevel(logging.INFO)
-    filehandler.setLevel(logging.DEBUG)
+    consolehandler.setLevel(consolelevel)
+    filehandler.setLevel(filelevel)
 
     # logger.setLevel(logging.DEBUG)
     logger.addHandler(consolehandler)
