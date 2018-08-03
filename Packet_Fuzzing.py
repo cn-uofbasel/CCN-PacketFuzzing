@@ -103,7 +103,6 @@ if __name__ == '__main__':
     if not os.path.exists(args.path):
         logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
         sys.exit(1)
-    paktes = None
     proc = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
@@ -136,6 +135,7 @@ if __name__ == '__main__':
 
     packCount = 0
     # send packages
+    package = None
     while (args.counter == -1 or packCount < args.counter):
         if not (args.parser in none) and not check_proc_alive(proc):
             logger.warning("lost parser")
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         # loop
         while True:
             try:
-                package = PacketMaker.makePackage[random.choice(list(types))]
+                package = PacketMaker.makePackage[random.choice(list(types))]()
                 logger.info("Package n° %d \t %s", packCount, package)
                 break
             except OverflowError:

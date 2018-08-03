@@ -315,9 +315,9 @@ def _makeCCNxContentObject():
     return TLVPackage("ContentOject", 0x0002, length, subpackages)
 
 
-makePackage = {NDNPackages.Interest: _makeInterestPacket(),
-               NDNPackages.LinkObject: _makeLinkObject(),
-               NDNPackages.Data: _makeDataPacket(),
-               CCNxPackages.Interest: _makeCCNxInterest(),
-               CCNxPackages.ContentOject: _makeCCNxContentObject()
+makePackage = {NDNPackages.Interest: _makeInterestPacket,
+               NDNPackages.LinkObject: _makeLinkObject,
+               NDNPackages.Data: _makeDataPacket,
+               CCNxPackages.Interest: _makeCCNxInterest,
+               CCNxPackages.ContentOject: _makeCCNxContentObject
                }
