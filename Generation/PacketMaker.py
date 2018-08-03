@@ -10,13 +10,13 @@ Building functions for packets. Top level packets can be accessed through makePa
 
 class NDNPackages(Enum):
     Interest = 0
-    LinkObject = 1
+    Data = 1
+    LinkObject = 2
 
 
 class CCNxPackages(Enum):
     Interest = 0
-    Data = 1
-    ContentOject = 2
+    ContentOject = 1
 
 
 class PackageTypes(Enum):

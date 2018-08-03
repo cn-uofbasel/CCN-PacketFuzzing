@@ -104,6 +104,7 @@ if __name__ == '__main__':
         logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
         sys.exit(1)
     paktes = None
+    proc = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
         proc= start.startCCN(args.path)
@@ -161,7 +162,7 @@ if __name__ == '__main__':
         packCount += 1
     if (check_proc_alive(proc)):
         proc.kill()
-    if (subparser is not None):
+    if (args.parser not in none):
         out = subprocess.check_output(['ps', '-A', 'H'])
         out = out.decode('ascii')
         for line in out.splitlines():
