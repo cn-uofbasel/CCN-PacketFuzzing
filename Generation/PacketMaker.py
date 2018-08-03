@@ -289,7 +289,7 @@ def _makeCCNxInterest():
         cohrp = _makeContentObjectHashRestriciton()
         subpackages.append(cohrp)
     length = _randomLength(len(subpackages))
-    return TLVPackage("Interest", 0x0000, length, subpackages)
+    return TLVPackage("Interest", 0x0001, length, subpackages)
 
 
 def _makePayloadType():
