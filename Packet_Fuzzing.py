@@ -144,7 +144,6 @@ if __name__ == '__main__':
         while True:
             try:
                 package = PacketMaker.makePackage[random.choice(list(types))]()
-                logger.info("Package no %d \t %s", packCount, package)
                 break
             except OverflowError:
                 logger.warning("A package grew to large. Skipping it")
@@ -155,6 +154,7 @@ if __name__ == '__main__':
         if (args.parser not in none):
             sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
+        logger.info("Package no %d \t %s", packCount, package)
         logger.info("Package no %d Size: %d", packCount, bytes.__len__())
         logger.info("Package no %d depth: %d", packCount, package.getDepth())
         time.sleep(args.sleep / 1000)
