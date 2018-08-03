@@ -15,7 +15,8 @@ class NDNPackages(Enum):
 
 class CCNxPackages(Enum):
     Interest = 0
-    ContentOject = 1
+    Data = 1
+    ContentOject = 2
 
 
 class PackageTypes(Enum):
@@ -316,6 +317,7 @@ def _makeCCNxContentObject():
 
 makePackage = {NDNPackages.Interest: _makeInterestPacket(),
                NDNPackages.LinkObject: _makeLinkObject(),
+               NDNPackages.Data: _makeDataPacket(),
                CCNxPackages.Interest: _makeCCNxInterest(),
                CCNxPackages.ContentOject: _makeCCNxContentObject()
                }
