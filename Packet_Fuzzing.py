@@ -144,7 +144,7 @@ if __name__ == '__main__':
         while True:
             try:
                 package = PacketMaker.makePackage[random.choice(list(types))]()
-                logger.info("Package n° %d \t %s", packCount, package)
+                logger.info("Package no %d \t %s", packCount, package)
                 break
             except OverflowError:
                 logger.warning("A package grew to large. Skipping it")
