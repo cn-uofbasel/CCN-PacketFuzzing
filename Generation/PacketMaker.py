@@ -10,7 +10,8 @@ Building functions for packets. Top level packets can be accessed through makePa
 
 class NDNPackages(Enum):
     Interest = 0
-    LinkObject = 1
+    Data = 1
+    LinkObject = 2
 
 
 class CCNxPackages(Enum):
@@ -288,7 +289,7 @@ def _makeCCNxInterest():
         cohrp = _makeContentObjectHashRestriciton()
         subpackages.append(cohrp)
     length = _randomLength(len(subpackages))
-    return TLVPackage("Interest", 0x0000, length, subpackages)
+    return TLVPackage("Interest", 0x0001, length, subpackages)
 
 
 def _makePayloadType():
@@ -314,8 +315,9 @@ def _makeCCNxContentObject():
     return TLVPackage("ContentOject", 0x0002, length, subpackages)
 
 
-makePackage = {NDNPackages.Interest: _makeInterestPacket(),
-               NDNPackages.LinkObject: _makeLinkObject(),
-               CCNxPackages.Interest: _makeCCNxInterest(),
-               CCNxPackages.ContentOject: _makeCCNxContentObject()
+makePackage = {NDNPackages.Interest: _makeInterestPacket,
+               NDNPackages.LinkObject: _makeLinkObject,
+               NDNPackages.Data: _makeDataPacket,
+               CCNxPackages.Interest: _makeCCNxInterest,
+               CCNxPackages.ContentOject: _makeCCNxContentObject
                }

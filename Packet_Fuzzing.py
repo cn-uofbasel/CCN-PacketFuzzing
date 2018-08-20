@@ -10,6 +10,8 @@ import sys
 import _thread
 from Starter import StartParser as start
 import binascii
+import subprocess
+import signal
 
 """
 Main startpoint to invoke a fuzzer.
@@ -58,6 +60,13 @@ def check_positive(value):
         raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
     return ivalue
 
+
+def check_proc_alive(proc):
+    if proc is not None:
+        return proc.poll() is None
+    else:
+        return False
+
 if __name__ == '__main__':
     logger = Logger.getLogger()
     logger.debug("starting")
@@ -94,23 +103,23 @@ if __name__ == '__main__':
     if not os.path.exists(args.path):
         logger.error("Path"+args.path+" doesn't exist. Please check for spelling mistakes")
         sys.exit(1)
-    paktes = None
+    proc = None
     if args.parser in ccn:
         logger.info("CCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startCCN, (args.path,))
+        proc= start.startCCN(args.path)
 
     elif args.parser in pycn:
         logger.info("PyCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPyCN, (args.path,))
+        proc = start.startPyCN(args.path)
 
     elif args.parser in picn:
         logger.info("PiCN invoked with path %s", args.path)
-        _thread.start_new_thread(start.startPiCN, (args.path,))
+        proc = start.startPiCN(args.path)
     elif args.parser in none:
         logger.info("staring without parser")
 
     time.sleep(5)
-    if (args.parser not in none) and (_thread._count() == 0):
+    if (args.parser not in none) and (not check_proc_alive(proc)):
         logger.error("Looks like parser couldn't be started. Stopping")
         sys.exit(1)
     # TODO Check if port 9000 is also used on PyCN-lite
@@ -126,12 +135,15 @@ if __name__ == '__main__':
 
     packCount = 0
     # send packages
-    while ((args.parser in none) or (_thread._count() > 0)) and (args.counter == -1 or packCount < args.counter):
+    package = None
+    while (args.counter == -1 or packCount < args.counter):
+        if not (args.parser in none) and not check_proc_alive(proc):
+            logger.warning("lost parser")
+            break
         # loop
         while True:
             try:
-                package = PacketMaker.makePackage[random.choice(list(types))]
-                logger.info("Package n° %d \t %s", packCount, package)
+                package = PacketMaker.makePackage[random.choice(list(types))]()
                 break
             except OverflowError:
                 logger.warning("A package grew to large. Skipping it")
@@ -142,9 +154,20 @@ if __name__ == '__main__':
         if (args.parser not in none):
             sender.sendMessage(bytes.tobytes())
         history.append((package, bytes))
+        logger.info("Package no %d \t %s", packCount, package)
         logger.info("Package no %d Size: %d", packCount, bytes.__len__())
         logger.info("Package no %d depth: %d", packCount, package.getDepth())
         time.sleep(args.sleep / 1000)
         # print(history)
         packCount += 1
-
+    if (check_proc_alive(proc)):
+        proc.kill()
+    if (args.parser not in none):
+        out = subprocess.check_output(['ps', '-A', 'H'])
+        out = out.decode('ascii')
+        for line in out.splitlines():
+            if args.path in line:
+                if '9000' in line:
+                    pid = int(line.split(None, 1)[0])
+                    logger.info("Looks like process %d %s is an artifact, killing it",pid,line)
+                    os.kill(pid, signal.SIGKILL)
