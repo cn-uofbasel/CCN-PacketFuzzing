@@ -69,6 +69,8 @@ def check_proc_alive(proc):
 
 if __name__ == '__main__':
     try:
+        proc = None
+        args = None
         logger = Logger.getLogger()
         logger.debug("starting")
         logger.info("is starting")
@@ -165,7 +167,7 @@ if __name__ == '__main__':
     finally:
         if (check_proc_alive(proc)):
             proc.kill()
-        if (args.parser not in none):
+        if (args is not None and args.parser not in none):
             out = subprocess.check_output(['ps', '-A', 'H'])
             out = out.decode('ascii')
             for line in out.splitlines():
