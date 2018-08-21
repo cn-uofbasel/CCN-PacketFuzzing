@@ -82,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('path', help="Path to the parser on this machine")
     parser.add_argument('-f', '--fuzziness',help='Level of incorrectness',required=False, default=0,type=int,choices=[0,1,2])
     parser.add_argument('-s', '--sleep', help='Milliseconds to sleep between the Packages', default=100, type=int,
-                        choices=range(100, 2100, 100), metavar=[100 - 2000], required=False)
+                        choices=range(100, 2100, 100), metavar="{100,200,...,2000}", required=False)
     parser.add_argument('-c', '--counter', help='Number of Packets to generate', type=check_positive, default=-1,
                         required=False)
     subparser = parser.add_subparsers(help='parses the protocoll options', dest='protocoll')
