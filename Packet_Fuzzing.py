@@ -99,7 +99,6 @@ if __name__ == '__main__':
         for arg in vars(args):
             logger.info("%s set to %s", arg, args.__getattribute__(arg))
         Encode.setFuzziness(args.fuzziness)
-        args.protocoll = 'bla'
         if args.protocoll is None:
             args.protocoll = "NDN"
         if not os.path.exists(args.path):
