@@ -116,4 +116,6 @@ def randomData(len):
     offset = 0
     if (fuzziness > 0):
         offset = random.randint(-len, len)
+        if (offset == 0):
+            offset = 1
     return os.urandom(len + offset)
