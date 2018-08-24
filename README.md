@@ -20,7 +20,7 @@ It is written in Python 3.6, runs on Linux and is able to test CCN-lite, PiCN an
 
 ## Usage
 #### Parsers
-To test one of the supported parsers, you have to have it on your machine. Infos for Installatin can be found here:
+To test one of the supported parsers, you have to have it on your machine. Infos for Installation can be found here:
   - CCN-lite: https://github.com/cn-uofbasel/ccn-lite/blob/master/doc/README-unix.md
   - PiCN: https://github.com/cn-uofbasel/PiCN
   - PyCN-lite: https://github.com/cn-uofbasel/PyCN-lite
@@ -29,7 +29,7 @@ To test one of the supported parsers, you have to have it on your machine. Infos
 ```bash
 python3.6 Packet_Fuzzing.py 'parser' 'path'
 ```
-**Parser**: This indicates the programm that should be tested.  
+**Parser**: This indicates the program that should be tested.  
 **Path**: The relative or absolute path to the main folder of the parser.
 
 **Examples**
@@ -40,7 +40,7 @@ python3.6 Packet_Fuzzing ccn ~/MyTestfile/ccn-lite
 ```
 
 ## Options
-The CCN-PacketFuzzer brings some commandline options. For a quick help run the programm with argument `-h` or `--help`
+The CCN-PacketFuzzer brings some command line options. For a quick help run the program with argument `-h` or `--help`
 ### Simple Optionals
 #### Fuzziness Level
 `-f` or `--fuzziness`
@@ -56,17 +56,17 @@ This sets the timer between to packages in Milliseconds. It accepts values betwe
 
 #### Counter
 Per default the Fuzzer is running until the parser crashes or it is interrupted.
-This can be changed with `-c` or `--counter`. It declares whow many packets should be send and accepts any positive number in integer range. If the parser crashes, the programm is still stopped.
+This can be changed with `-c` or `--counter`. It declares how many packets should be send and accepts any positive number in integer range. If the parser crashes, the program is still stopped.
 
-### Protocoll
-After all optional arguments there can be a protocoll field.
-`NDN` or `CCNx`. For commandline help type:
+### Protocol
+After all optional arguments there can be a protocol field.
+`NDN` or `CCNx`. For command line help type:
 ```bash
 python3 Packet_Fuzzing.py 'parser' 'path' 'protocoll' -h
 ```
-This specifies the packettype the fuzzer is using. Default is NDN.
-#### Protocoll options
-The protocolls themselfes have the option to specifie which packettypes should be send with `-p` or `--protocoll`. These are for
+This specifies the packet type the fuzzer is using. Default is NDN.
+#### Protocol options
+The protocols themselves have the option to specify which packet types should be send with `-p` or `--protocoll`. These are for
 **NDN**:
 - l: LinkObject
 - i: Interest
@@ -76,7 +76,7 @@ The protocolls themselfes have the option to specifie which packettypes should b
 - i: Interest
 - c: ContentObject
 
-All packettypes can be combined.
+All packet types can be combined.
 **Examples**:
 NDN packages without LinkObject.
 ```bash
