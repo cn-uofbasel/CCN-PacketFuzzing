@@ -16,7 +16,7 @@ class CCNxEncoder:
         creates a new encoder with a buffer for 8 bytes as this is the size for a fixed header without any payload
         :param initialcapacity: the initalsize of the internal bytearray. Grows dynamically
         """
-        self._buffer = bytearray(8)
+        self._buffer = bytearray(2)
         self._length = 0
 
     def writeNumberFixedSize(self, number, size):
