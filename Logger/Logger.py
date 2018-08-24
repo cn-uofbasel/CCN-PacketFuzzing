@@ -13,7 +13,7 @@ def getLogger(consolelevel=logging.INFO, filelevel=logging.DEBUG):
         return logger
     logger.propagate = False
     pathlib.Path('Logfiles').mkdir(parents=True, exist_ok=True)
-    fileformatting = logging.Formatter('%(asctime)s - %(levelname)s -\t %(filename)s,%(lineno)d:\t%(message)s',
+    fileformatting = logging.Formatter('%(asctime)s.%(msecs)03d - %(levelname)s -\t %(filename)s,%(lineno)d:\t%(message)s',
                                        datefmt='%b %d %Y %H:%M:%S')
     consoleformatting = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 

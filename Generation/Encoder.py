@@ -79,16 +79,19 @@ class CCNxEncoder:
 
         this method is used to add
         """
-        newlength = self._length + len(view.obj)
-        self._ensurelength(newlength)
-        for x in range(newlength - self._length):
-            self._buffer[-newlength + x] = view.obj[x]
-        self._length = newlength
+        if view is not None:
+            newlength = self._length + len(view.obj)
+            self._ensurelength(newlength)
+            for x in range(newlength - self._length):
+                self._buffer[-newlength + x] = view.obj[x]
+            self._length = newlength
 
     def __len__(self):
         return self._length
 
 
     def getOutput(self):
-        return memoryview(
-            self._buffer)[self._length:]
+        if self._length > 0:
+            return memoryview(self._buffer)[-self._length:]
+        else:
+            return None

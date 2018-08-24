@@ -40,6 +40,8 @@ def encodeNDNPackage(package):
         len = encoder.getOutput().__len__()
         if (fuzziness < 2):
             package.len = len
+        elif (package.len ==0):
+            package.len = 1
     else:  # recursion end
         data = randomData(package.len)
         encoder.writeBuffer(data)
@@ -55,9 +57,14 @@ def _encodeCCNxSubpackages(package):
     if package.subpackages is not None:  # package payload is a TLV itself
         for p in reversed(package.subpackages):
             encoder.writeMemoryView(_encodeCCNxSubpackages(p))
-        length = encoder.getOutput().__len__()
+        if encoder.getOutput() is not None:
+            length = encoder.getOutput().__len__()
+        else:
+            length = 0
         if fuzziness < 2:
             package.len = length
+        elif (package.len ==0):
+            package.len = 1
     else:  # recursion end
         data = randomData(package.len)
         encoder.writeByteArray(data)
