@@ -92,6 +92,8 @@ class CCNxEncoder:
 
     def getOutput(self):
         if self._length > 0:
-            return memoryview(self._buffer)[-self._length:]
+            newarray = bytearray(self._length)
+            newarray = self._buffer[-self._length:]
+            return memoryview(newarray)
         else:
             return None
