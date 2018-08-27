@@ -1,5 +1,6 @@
 # CCN-PacketFuzzing
-Fuzzing is a software testing technique where unexpected input is passed to a software. The project aims to test packet encoding of NDN/CCN implemenations. Supported packet formats are *NDN Packet FOrmat* and *CCNx*. This software runs on Python 3.6+ and is able to test packet decoding of CCN-lite, PiCN and PyCN-lite.
+
+Fuzzing is a software testing technique where unexpected input is passed to a software. This project aims to test packet encoding of NDN/CCN implemenations. Supported packet formats are *NDN Packet Format* and *CCNx*. This software runs on Python 3.6+ and is able to test packet decoding of CCN-lite, PiCN and PyCN-lite.
 
 ## Setup
 
