@@ -1,7 +1,5 @@
 # CCN-PacketFuzzing
-**Packet Fuzzer for CCN Packet Formats.**  
-This fuzzer randomizes the TLV-Components of NDN and CCNx and can change the length values.
-It is written in Python 3.6, runs on Linux and is able to test CCN-lite, PiCN and PyCN-lite.
+Fuzzing is a software testing technique where unexpected input is passed to a software. The project aims to test packet encoding of NDN/CCN implemenations. Supported packet formats are *NDN Packet FOrmat* and *CCNx*. This software runs on Python 3.6+ and is able to test packet decoding of CCN-lite, PiCN and PyCN-lite.
 
 ## Setup
 
